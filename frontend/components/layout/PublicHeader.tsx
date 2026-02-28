@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Menu, X, Leaf } from 'lucide-react';
 import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 
 const NAV_LINKS = [
     { href: '/', label: 'Home' },
@@ -16,6 +17,7 @@ const NAV_LINKS = [
 export function PublicHeader() {
     const pathname = usePathname();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { isAuthenticated, isAdmin } = useAuth();
 
     return (
         <header className="sticky top-0 z-40 w-full bg-surface/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
@@ -36,9 +38,15 @@ export function PublicHeader() {
                             {link.label}
                         </Link>
                     ))}
-                    <Link href="/login">
-                        <Button variant="outline" size="sm">Admin Login</Button>
-                    </Link>
+                    {isAuthenticated && isAdmin ? (
+                        <Link href="/dashboard">
+                            <Button variant="default" size="sm">Dashboard</Button>
+                        </Link>
+                    ) : (
+                        <Link href="/login">
+                            <Button variant="outline" size="sm">Admin Login</Button>
+                        </Link>
+                    )}
                 </nav>
 
                 {/* Mobile Toggle */}
@@ -64,9 +72,15 @@ export function PublicHeader() {
                         </Link>
                     ))}
                     <div className="pt-2 border-t border-gray-100">
-                        <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                            <Button variant="outline" className="w-full">Admin Login</Button>
-                        </Link>
+                        {isAuthenticated && isAdmin ? (
+                            <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                                <Button variant="default" className="w-full">Dashboard</Button>
+                            </Link>
+                        ) : (
+                            <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                                <Button variant="outline" className="w-full">Admin Login</Button>
+                            </Link>
+                        )}
                     </div>
                 </div>
             )}
