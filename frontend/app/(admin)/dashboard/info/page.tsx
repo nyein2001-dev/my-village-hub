@@ -35,7 +35,7 @@ export default function AdminInfoHubPage() {
         }
     }, [user]);
 
-    if (!user || (user.roles && !user.roles.includes('admin') && !user.roles.includes('content_editor'))) {
+    if (!user || (!user.roles?.includes('admin') && !user.roles?.includes('content_editor'))) {
         return <div className="p-8 text-center text-red-500">You do not have permission to access the Info Hub CMS.</div>;
     }
 

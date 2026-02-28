@@ -29,7 +29,7 @@ export default function AdminEmergencyContactsPage() {
         }
     }, [user]);
 
-    if (!user || (user.roles && !user.roles.includes('admin'))) {
+    if (!user || !user.roles?.includes('admin')) {
         return <div className="p-8 text-center text-red-500">You must be an Administrator to access Emergency Contacts.</div>;
     }
 

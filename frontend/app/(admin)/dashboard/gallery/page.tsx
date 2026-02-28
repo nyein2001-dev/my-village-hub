@@ -28,7 +28,7 @@ export default function AdminGalleryPage() {
         }
     }, [user]);
 
-    if (!user || (user.roles && !user.roles.includes('admin') && !user.roles.includes('content_editor'))) {
+    if (!user || (!user.roles?.includes('admin') && !user.roles?.includes('content_editor'))) {
         return <div className="p-8 text-center text-red-500">You must be an Administrator or Content Editor to manage the gallery.</div>;
     }
 
