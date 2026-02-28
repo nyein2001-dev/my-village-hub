@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, AuthResponse } from '@/types/user';
+import { UserRole } from '@/types/roles';
 import { api } from '@/lib/api/axios';
 
 interface AuthContextType {
@@ -58,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setUser(userData);
 
             // Navigate based on roles
-            if (userData.roles.includes('admin') || userData.roles.includes('content_editor')) {
+            if (userData.roles.includes(UserRole.ADMIN) || userData.roles.includes(UserRole.CONTENT_EDITOR)) {
                 router.push('/dashboard');
             } else {
                 router.push('/');
@@ -83,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         logout,
         isAuthenticated: !!user,
-        isAdmin: user?.roles.includes('admin') || false,
+        isAdmin: user?.roles.includes(UserRole.ADMIN) || false,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

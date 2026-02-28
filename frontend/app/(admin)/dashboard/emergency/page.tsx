@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/Table';
 import { useAuth } from '@/hooks/useAuth';
+import { UserRole } from '@/types/roles';
 
 export default function AdminEmergencyContactsPage() {
     const { user } = useAuth();
@@ -29,7 +30,7 @@ export default function AdminEmergencyContactsPage() {
         }
     }, [user]);
 
-    if (!user || !user.roles?.includes('admin')) {
+    if (!user || !user.roles?.includes(UserRole.ADMIN)) {
         return <div className="p-8 text-center text-red-500">You must be an Administrator to access Emergency Contacts.</div>;
     }
 

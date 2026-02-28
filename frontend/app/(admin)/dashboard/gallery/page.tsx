@@ -5,6 +5,7 @@ import { api } from '@/lib/api/axios';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
+import { UserRole } from '@/types/roles';
 
 export default function AdminGalleryPage() {
     const { user } = useAuth();
@@ -28,7 +29,7 @@ export default function AdminGalleryPage() {
         }
     }, [user]);
 
-    if (!user || (!user.roles?.includes('admin') && !user.roles?.includes('content_editor'))) {
+    if (!user || (!user.roles?.includes(UserRole.ADMIN) && !user.roles?.includes(UserRole.CONTENT_EDITOR))) {
         return <div className="p-8 text-center text-red-500">You must be an Administrator or Content Editor to manage the gallery.</div>;
     }
 

@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/Table';
 import { useAuth } from '@/hooks/useAuth';
+import { UserRole } from '@/types/roles';
 
 export default function AdminArchivePage() {
     const { user } = useAuth();
@@ -35,7 +36,7 @@ export default function AdminArchivePage() {
         }
     }, [user]);
 
-    if (!user || (!user.roles?.includes('admin') && !user.roles?.includes('content_editor'))) {
+    if (!user || (!user.roles?.includes(UserRole.ADMIN) && !user.roles?.includes(UserRole.CONTENT_EDITOR))) {
         return <div className="p-8 text-center text-red-500">You do not have permission to access the archive CMS.</div>;
     }
 
