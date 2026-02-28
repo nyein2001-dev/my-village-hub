@@ -40,7 +40,7 @@ export function PublicHeader() {
                     ))}
                     {isAuthenticated && isAdmin ? (
                         <Link href="/dashboard">
-                            <Button variant="default" size="sm">Dashboard</Button>
+                            <Button variant="primary" size="sm">Dashboard</Button>
                         </Link>
                     ) : (
                         <Link href="/login">
@@ -74,7 +74,7 @@ export function PublicHeader() {
                     <div className="pt-2 border-t border-gray-100">
                         {isAuthenticated && isAdmin ? (
                             <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-                                <Button variant="default" className="w-full">Dashboard</Button>
+                                <Button variant="primary" className="w-full">Dashboard</Button>
                             </Link>
                         ) : (
                             <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
