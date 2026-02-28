@@ -1,10 +1,14 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = 'django-insecure-replace-this-in-production'
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+SECRET_KEY = env('SECRET_KEY', default='django-insecure-replace-this-in-production')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -19,6 +23,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
+    'cloudinary_storage',
+    'cloudinary',
 
     # Local apps
     'apps.authentication',
@@ -88,6 +94,12 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+CLOUDINARY_STORAGE = {
+    'CLOUDINARY_URL': env('CLOUDINARY_URL', default='')
+}
+# Only use cloudinary if url is configured
+if env('CLOUDINARY_URL', default=''):
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

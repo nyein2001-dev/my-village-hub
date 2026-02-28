@@ -1,22 +1,19 @@
 from .base import *
 
-DEBUG = True
+DEBUG = env.bool('DEBUG', default=True)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+
+import dj_database_url
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'taung_ywar_ma',
-        'USER': 'postgres',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '5433',
-        'OPTIONS': {
-            'options': '-c search_path=public'
-        }
-    }
+    'default': dj_database_url.config(
+        default=env('DATABASE_URL', default='postgres://postgres:1234@localhost:5433/taung_ywar_ma'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
+DATABASES['default']['OPTIONS'] = {'options': '-c search_path=public'}
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
