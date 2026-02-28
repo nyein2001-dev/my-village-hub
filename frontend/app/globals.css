@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-dark: #1B4332;
+  --color-brand: #2D6A4F;
+  --color-brand-light: #52B788;
+  --color-brand-tint: #D8F3DC;
+
+  --color-surface: #FFFFFF;
+  --color-surface-muted: #F9FAFB;
+
+  --color-text-main: #111827;
+  --color-text-muted: #6B7280;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+@layer base {
+  body {
+    @apply bg-surface-muted text-text-main font-sans antialiased;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand text-white px-4 py-2 rounded-xl hover:bg-brand-dark transition-colors font-medium shadow-sm disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-surface text-brand border border-brand px-4 py-2 rounded-xl hover:bg-brand-tint transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .card-base {
+    @apply bg-surface rounded-2xl shadow-card p-6 border border-gray-100;
+  }
+
+  .input-field {
+    @apply w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-brand-light focus:border-brand-light outline-none transition-shadow;
+  }
+}
