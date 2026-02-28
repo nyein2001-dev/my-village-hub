@@ -16,3 +16,9 @@ DATABASES = {
 if 'OPTIONS' not in DATABASES['default']:
     DATABASES['default']['OPTIONS'] = {}
 DATABASES['default']['OPTIONS']['options'] = '-c search_path=public'
+
+CORS_ALLOWED_ORIGINS = [
+    "https://taung-ywar-ma.vercel.app",
+    "http://localhost:3000",
+]
+CORS_ALLOW_CREDENTIALS = True
