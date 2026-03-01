@@ -9,6 +9,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@
 import { useAuth } from '@/hooks/useAuth';
 import { UserRole } from '@/types/roles';
 
+
 export default function AdminArchivePage() {
     const { user } = useAuth();
     const [festivals, setFestivals] = useState([]);

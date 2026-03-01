@@ -9,6 +9,8 @@ import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { MapPin, Scale, Leaf } from 'lucide-react';
 
+
+
 interface Crop {
     id: string;
     name: string;
@@ -16,7 +18,7 @@ interface Crop {
     description: string;
     quantity_available: number;
     unit: string;
-    image_detail?: { file_url: string; file_path: string }; // Adjust based on actual DRF output
+    image_detail?: { file_url: string; file_path: string; alt_text?: string }; // Adjust based on actual DRF output
     farmer_detail: {
         id: string;
         full_name: string;
@@ -114,7 +116,7 @@ export default function CropsPage() {
                             {crop.image_detail ? (
                                 <div className="h-48 w-full bg-gray-200 relative overflow-hidden shrink-0">
                                     {/* Fallback to gray box if no real image system is configured yet */}
-                                    <img src={crop.image_detail.file_path || '/placeholder-crop.jpg'} alt={crop.name} className="w-full h-full object-cover" />
+                                    <img src={crop.image_detail.file_path || '/placeholder-crop.jpg'} alt={crop.image_detail?.alt_text || `Crop: ${crop.name}`} className="w-full h-full object-cover" />
                                 </div>
                             ) : (
                                 <div className="h-48 w-full bg-brand-tint flex items-center justify-center shrink-0">

@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Users, Leaf, ShoppingCart, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 
+
 export default function DashboardHome() {
     const { user } = useAuth();
     const [stats, setStats] = useState({

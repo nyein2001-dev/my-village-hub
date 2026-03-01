@@ -51,8 +51,10 @@ export function PublicHeader() {
 
                 {/* Mobile Toggle */}
                 <button
-                    className="md:hidden text-text-primary"
+                    className="md:hidden text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2 rounded"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    aria-expanded={isMobileMenuOpen}
+                    aria-label="Toggle mobile menu"
                 >
                     {isMobileMenuOpen ? <X /> : <Menu />}
                 </button>

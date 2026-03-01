@@ -1,0 +1,4 @@
+export const metadata = { title: 'Archive' };
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}

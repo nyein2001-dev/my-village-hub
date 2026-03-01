@@ -46,13 +46,15 @@ class MediaViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         file = self.request.data.get('file_path')
+        alt_text = self.request.data.get('alt_text')
         if file:
             serializer.save(
                 uploaded_by=self.request.user,
                 file_name=file.name,
                 file_size=file.size,
-                mime_type=file.content_type
+                mime_type=file.content_type,
+                alt_text=alt_text
             )
         else:
-            serializer.save(uploaded_by=self.request.user)
+            serializer.save(uploaded_by=self.request.user, alt_text=alt_text)
 

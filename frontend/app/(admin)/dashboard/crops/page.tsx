@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/Input';
 import { Plus, Trash2 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 
+
 export default function AdminCropsPage() {
     const [crops, setCrops] = useState<any[]>([]);
     const [farmers, setFarmers] = useState<any[]>([]);

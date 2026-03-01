@@ -20,7 +20,7 @@ export function PublicFooter() {
                     <div>
                         <h4 className="text-white font-medium mb-4">Contact Information</h4>
                         <ul className="space-y-2 text-sm">
-                            <li>Mandalay Region, Myanmar</li>
+                            <li>Magway Region, Myanmar</li>
                             <li>Email: contact@taungywarma.com</li>
                             <li>Phone: +95 9 123 456 789</li>
                         </ul>

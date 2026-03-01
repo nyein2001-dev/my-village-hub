@@ -6,6 +6,8 @@ import { api } from '@/lib/api/axios';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Calendar, User, Clock } from 'lucide-react';
 
+
+
 interface Festival {
     id: string;
     name: string;
@@ -13,7 +15,7 @@ interface Festival {
     start_date: string;
     end_date: string;
     location: string;
-    cover_image_detail?: { file_url: string };
+    cover_image_detail?: { file_url: string; alt_text?: string };
 }
 
 interface BlogPost {
@@ -23,7 +25,7 @@ interface BlogPost {
     content: string;
     published_date: string;
     author_detail?: { username: string };
-    cover_image_detail?: { file_url: string };
+    cover_image_detail?: { file_url: string; alt_text?: string };
 }
 
 export default function ArchivePage() {
@@ -77,7 +79,7 @@ export default function ArchivePage() {
                                 {festivals.map(festival => (
                                     <Card key={festival.id} className="overflow-hidden hover:shadow-card transition-shadow">
                                         <div className="h-48 bg-gray-200 relative">
-                                            <img src={festival.cover_image_detail?.file_url || '/placeholder-festival.jpg'} alt={festival.name} className="w-full h-full object-cover" />
+                                            <img src={festival.cover_image_detail?.file_url || '/placeholder-festival.jpg'} alt={festival.cover_image_detail?.alt_text || `Festival: ${festival.name}`} className="w-full h-full object-cover" />
                                         </div>
                                         <CardContent className="pt-5">
                                             <h3 className="text-xl font-bold mb-2 line-clamp-1">{festival.name}</h3>
@@ -107,7 +109,7 @@ export default function ArchivePage() {
                                 {blogPosts.map(post => (
                                     <div key={post.id} className="flex flex-col sm:flex-row gap-4 bg-white rounded-card p-4 shadow-sm border border-gray-50 hover:shadow-md transition-shadow">
                                         <div className="sm:w-1/3 h-48 sm:h-auto bg-gray-200 rounded-button overflow-hidden shrink-0">
-                                            <img src={post.cover_image_detail?.file_url || '/placeholder-blog.jpg'} alt={post.title} className="w-full h-full object-cover" />
+                                            <img src={post.cover_image_detail?.file_url || '/placeholder-blog.jpg'} alt={post.cover_image_detail?.alt_text || `Blog Post: ${post.title}`} className="w-full h-full object-cover" />
                                         </div>
                                         <div className="sm:w-2/3 flex flex-col justify-center">
                                             <div className="text-xs text-brand font-medium mb-2 flex items-center gap-2">

@@ -11,8 +11,9 @@ export function AdminTopbar({ toggleMobileSidebar }: { toggleMobileSidebar: () =
         <header className="h-16 bg-white shadow-sm border-b border-border flex items-center justify-between px-4 lg:px-6 z-30 sticky top-0">
             <div className="flex items-center gap-4">
                 <button
-                    className="md:hidden text-text-secondary hover:text-text-primary p-1 rounded-md"
+                    className="md:hidden text-text-secondary hover:text-text-primary p-1 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2"
                     onClick={toggleMobileSidebar}
+                    aria-label="Toggle sidebar"
                 >
                     <Menu className="h-6 w-6" />
                 </button>

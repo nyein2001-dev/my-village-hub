@@ -59,8 +59,9 @@ export function AdminSidebar({ mobileOpen, setMobileOpen }: { mobileOpen: boolea
                         </div>
                     )}
                     <button
-                        className="hidden md:flex text-white/70 hover:text-white"
+                        className="hidden md:flex text-white/70 hover:text-white p-1 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-light"
                         onClick={toggleSidebar}
+                        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
                     >
                         {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
                     </button>

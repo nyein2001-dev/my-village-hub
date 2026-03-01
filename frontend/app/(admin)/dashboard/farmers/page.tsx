@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/Input';
 import { Plus, Trash2 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 
+
 export default function AdminFarmersPage() {
     const [farmers, setFarmers] = useState<any[]>([]);
     const [users, setUsers] = useState<any[]>([]);

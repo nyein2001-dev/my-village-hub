@@ -74,6 +74,7 @@ CREATE TABLE media (
     file_path   TEXT NOT NULL,
     file_size   INTEGER,
     mime_type   VARCHAR(100),
+    alt_text    TEXT,
     uploaded_by UUID REFERENCES users(id) ON DELETE SET NULL,
     created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

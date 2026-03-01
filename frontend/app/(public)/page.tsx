@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { ArrowRight, Leaf, Map, Heart } from 'lucide-react';
 
+export const metadata = { title: 'Home' };
+
 export default function HomePage() {
     return (
         <>

@@ -72,6 +72,6 @@ from .models import Media
 class MediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Media
-        fields = ['id', 'file_name', 'file_path', 'file_size', 'mime_type', 'uploaded_by', 'created_at']
+        fields = ['id', 'file_name', 'file_path', 'file_size', 'mime_type', 'alt_text', 'uploaded_by', 'created_at']
         read_only_fields = ['id', 'uploaded_by', 'created_at']
 

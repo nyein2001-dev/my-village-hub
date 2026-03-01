@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
 import { UserRole } from '@/types/roles';
 
+
 export default function AdminGalleryPage() {
     const { user } = useAuth();
     const [images, setImages] = useState([]);

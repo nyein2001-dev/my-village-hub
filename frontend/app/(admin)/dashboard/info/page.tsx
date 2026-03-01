@@ -9,6 +9,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@
 import { useAuth } from '@/hooks/useAuth';
 import { UserRole } from '@/types/roles';
 
+
 export default function AdminInfoHubPage() {
     const { user } = useAuth();
     const [prices, setPrices] = useState([]);

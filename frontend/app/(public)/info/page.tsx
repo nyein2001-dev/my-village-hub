@@ -5,6 +5,7 @@ import { api } from '@/lib/api/axios';
 import { Card, CardContent } from '@/components/ui/Card';
 import { TrendingUp, TrendingDown, Pin, Megaphone, PhoneCall } from 'lucide-react';
 
+
 interface MarketPrice {
     id: string;
     crop_name: string;
