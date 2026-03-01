@@ -43,7 +43,7 @@ export default function HomePage() {
                         <div className="w-24 h-1 bg-brand mx-auto rounded-full"></div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         <div className="bg-white p-8 rounded-card shadow-card text-center hover:-translate-y-1 transition-transform duration-300">
                             <div className="w-16 h-16 bg-brand-tint rounded-card flex items-center justify-center mx-auto mb-6 text-brand">
                                 <Leaf size={32} />

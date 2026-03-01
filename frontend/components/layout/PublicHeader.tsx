@@ -51,12 +51,12 @@ export function PublicHeader() {
 
                 {/* Mobile Toggle */}
                 <button
-                    className="md:hidden text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2 rounded"
+                    className="md:hidden text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2 rounded min-h-[44px] min-w-[44px] flex items-center justify-center p-1"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     aria-expanded={isMobileMenuOpen}
                     aria-label="Toggle mobile menu"
                 >
-                    {isMobileMenuOpen ? <X /> : <Menu />}
+                    {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
             </div>
 
@@ -67,7 +67,7 @@ export function PublicHeader() {
                         <Link
                             key={link.href}
                             href={link.href}
-                            className={`block text-sm font-medium py-2 ${pathname === link.href ? 'text-brand' : 'text-text-secondary'}`}
+                            className={`flex items-center text-sm font-medium py-2 min-h-[44px] ${pathname === link.href ? 'text-brand' : 'text-text-secondary'}`}
                             onClick={() => setIsMobileMenuOpen(false)}
                         >
                             {link.label}

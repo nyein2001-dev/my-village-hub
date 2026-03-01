@@ -73,7 +73,9 @@ export default function AdminEmergencyContactsPage() {
                             {!loading && contacts.map((item: any) => (
                                 <TableRow key={item.id}>
                                     <TableCell className="font-medium">{item.name}</TableCell>
-                                    <TableCell className="font-mono">{item.phone}</TableCell>
+                                    <TableCell data-label="Phone Number" className="font-mono">
+                                        <a href={`tel:${item.phone_number}`} className="text-error hover:underline font-bold">{item.phone_number}</a>
+                                    </TableCell>
                                     <TableCell className="capitalize">{item.category}</TableCell>
                                     <TableCell>
                                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${item.is_published ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>

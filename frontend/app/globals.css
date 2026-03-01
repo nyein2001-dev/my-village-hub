@@ -64,15 +64,15 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-brand text-white px-4 py-2 rounded-button hover:bg-brand-light transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2;
+    @apply bg-brand text-white px-4 py-2 rounded-button hover:bg-brand-light transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2 min-h-[44px] md:min-h-0;
   }
 
   .btn-secondary {
-    @apply bg-white text-brand border border-brand px-4 py-2 rounded-button hover:bg-brand-tint transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2;
+    @apply bg-white text-brand border border-brand px-4 py-2 rounded-button hover:bg-brand-tint transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2 min-h-[44px] md:min-h-0;
   }
 
   .btn-destructive {
-    @apply bg-error text-white px-4 py-2 rounded-button hover:opacity-90 transition-opacity font-medium disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-error focus-visible:outline-offset-2;
+    @apply bg-error text-white px-4 py-2 rounded-button hover:opacity-90 transition-opacity font-medium disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-error focus-visible:outline-offset-2 min-h-[44px] md:min-h-0;
   }
 
   .card-base {
@@ -80,6 +80,36 @@
   }
 
   .input-field {
-    @apply w-full border border-border rounded-button px-4 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:border-brand transition-shadow text-text-primary;
+    @apply w-full border border-border rounded-button px-4 py-3 md:py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:border-brand transition-shadow text-text-primary min-h-[44px] md:min-h-0 text-base md:text-sm;
+  }
+
+  /* Responsive Table definitions for mobile card-based layout */
+  .responsive-table {
+    @apply w-full text-left text-sm whitespace-nowrap;
+  }
+
+  .responsive-table thead {
+    @apply hidden md:table-header-group bg-gray-50 border-b border-border text-text-secondary;
+  }
+
+  .responsive-table tbody {
+    @apply block md:table-row-group divide-y divide-gray-100 md:divide-y md:divide-gray-100 space-y-4 md:space-y-0 p-4 md:p-0;
+  }
+
+  .responsive-table tr {
+    @apply block md:table-row bg-white shadow-card rounded-card border border-border md:bg-transparent md:shadow-none md:rounded-none md:border-0 hover:bg-transparent md:hover:bg-gray-50/50;
+  }
+
+  .responsive-table th {
+    @apply px-6 py-4 font-medium;
+  }
+
+  .responsive-table td {
+    @apply block md:table-cell px-4 py-3 border-b border-gray-100 md:border-0 last:border-0 md:px-6 md:py-4 flex justify-between items-center text-right md:text-left;
+  }
+
+  .responsive-table td::before {
+    content: attr(data-label);
+    @apply float-left font-medium text-text-secondary md:hidden block text-left;
   }
 }

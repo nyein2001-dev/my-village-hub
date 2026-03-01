@@ -75,33 +75,35 @@ export default function AdminFarmersPage() {
             <Card>
                 <CardContent className="p-0">
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm whitespace-nowrap">
-                            <thead className="bg-gray-50 border-b border-border text-text-secondary">
+                        <table className="responsive-table">
+                            <thead>
                                 <tr>
-                                    <th className="px-6 py-4 font-medium">Full Name</th>
-                                    <th className="px-6 py-4 font-medium">Area</th>
-                                    <th className="px-6 py-4 font-medium">Phone</th>
-                                    <th className="px-6 py-4 font-medium">Status</th>
-                                    <th className="px-6 py-4 font-medium text-right">Actions</th>
+                                    <th>Full Name</th>
+                                    <th>Area</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th className="text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-100">
+                            <tbody>
                                 {loading ? (
-                                    <tr><td colSpan={5} className="px-6 py-8 text-center text-text-secondary">Loading...</td></tr>
+                                    <tr><td colSpan={5} className="text-center text-text-secondary py-8 block md:table-cell">Loading...</td></tr>
                                 ) : farmers.length === 0 ? (
-                                    <tr><td colSpan={5} className="px-6 py-8 text-center text-text-secondary">No farmer profiles found. Add one to get started.</td></tr>
+                                    <tr><td colSpan={5} className="text-center text-text-secondary py-8 block md:table-cell">No farmer profiles found. Add one to get started.</td></tr>
                                 ) : (
                                     farmers.map(farmer => (
-                                        <tr key={farmer.id} className={`hover:bg-gray-50/50 ${!farmer.is_active ? 'opacity-60' : ''}`}>
-                                            <td className="px-6 py-4 font-medium text-text-primary">{farmer.full_name}</td>
-                                            <td className="px-6 py-4">{farmer.village_area}</td>
-                                            <td className="px-6 py-4">{farmer.phone}</td>
-                                            <td className="px-6 py-4">
+                                        <tr key={farmer.id} className={!farmer.is_active ? 'opacity-60' : ''}>
+                                            <td data-label="Full Name" className="font-medium text-text-primary">{farmer.full_name}</td>
+                                            <td data-label="Area">{farmer.village_area}</td>
+                                            <td data-label="Phone">
+                                                <a href={`tel:${farmer.phone}`} className="text-brand hover:underline font-medium">{farmer.phone}</a>
+                                            </td>
+                                            <td data-label="Status">
                                                 <span className={`px-2 py-1 rounded text-xs font-medium ${farmer.is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                                                     {farmer.is_active ? 'Active' : 'Inactive'}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-right">
+                                            <td data-label="Actions" className="justify-end gap-2 text-right">
                                                 {farmer.is_active && (
                                                     <Button variant="ghost" size="sm" onClick={() => handleDelete(farmer.id)} className="text-error hover:text-red-700 hover:bg-red-50" title="Deactivate">
                                                         <Trash2 size={16} />

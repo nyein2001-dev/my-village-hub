@@ -83,35 +83,35 @@ export default function AdminCropsPage() {
             <Card>
                 <CardContent className="p-0">
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm whitespace-nowrap">
-                            <thead className="bg-gray-50 border-b border-border text-text-secondary">
+                        <table className="responsive-table">
+                            <thead>
                                 <tr>
-                                    <th className="px-6 py-4 font-medium">Crop Name</th>
-                                    <th className="px-6 py-4 font-medium">Category</th>
-                                    <th className="px-6 py-4 font-medium">Farmer</th>
-                                    <th className="px-6 py-4 font-medium">Available Qty</th>
-                                    <th className="px-6 py-4 font-medium">Status</th>
-                                    <th className="px-6 py-4 font-medium text-right">Actions</th>
+                                    <th>Crop Name</th>
+                                    <th>Category</th>
+                                    <th>Farmer</th>
+                                    <th>Available Qty</th>
+                                    <th>Status</th>
+                                    <th className="text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-100">
+                            <tbody>
                                 {loading ? (
-                                    <tr><td colSpan={6} className="px-6 py-8 text-center text-text-secondary">Loading...</td></tr>
+                                    <tr><td colSpan={6} className="text-center text-text-secondary py-8 block md:table-cell">Loading...</td></tr>
                                 ) : crops.length === 0 ? (
-                                    <tr><td colSpan={6} className="px-6 py-8 text-center text-text-secondary">No crops found. Add one to get started.</td></tr>
+                                    <tr><td colSpan={6} className="text-center text-text-secondary py-8 block md:table-cell">No crops found. Add one to get started.</td></tr>
                                 ) : (
                                     crops.map(crop => (
-                                        <tr key={crop.id} className="hover:bg-gray-50/50">
-                                            <td className="px-6 py-4 font-medium text-text-primary">{crop.name}</td>
-                                            <td className="px-6 py-4">{crop.category}</td>
-                                            <td className="px-6 py-4">{crop.farmer_detail?.full_name}</td>
-                                            <td className="px-6 py-4">{crop.quantity_available} {crop.unit}</td>
-                                            <td className="px-6 py-4">
+                                        <tr key={crop.id}>
+                                            <td data-label="Crop Name" className="font-medium text-text-primary">{crop.name}</td>
+                                            <td data-label="Category">{crop.category}</td>
+                                            <td data-label="Farmer">{crop.farmer_detail?.full_name}</td>
+                                            <td data-label="Available Qty">{crop.quantity_available} {crop.unit}</td>
+                                            <td data-label="Status">
                                                 <span className={`px-2 py-1 rounded text-xs font-medium ${crop.is_published ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
                                                     {crop.is_published ? 'Published' : 'Hidden'}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-right">
+                                            <td data-label="Actions" className="justify-end gap-2 text-right">
                                                 <Button variant="ghost" size="sm" onClick={() => handleDelete(crop.id)} className="text-error hover:text-red-700 hover:bg-red-50">
                                                     <Trash2 size={16} />
                                                 </Button>

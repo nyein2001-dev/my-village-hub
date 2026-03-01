@@ -6,9 +6,9 @@ import { useAuth } from '@/hooks/useAuth';
 import {
     LayoutDashboard, ShoppingCart, Users, Leaf,
     MapPin, BookOpen, AlertTriangle, Image as ImageIcon,
-    ChevronLeft, ChevronRight
+    ChevronLeft, ChevronRight, X
 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect } from 'react';
 
 const ADMIN_NAV = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -21,12 +21,37 @@ const ADMIN_NAV = [
     { href: '/dashboard/emergency', label: 'Emergency', icon: AlertTriangle },
 ];
 
-export function AdminSidebar({ mobileOpen, setMobileOpen }: { mobileOpen: boolean, setMobileOpen: (open: boolean) => void }) {
+export function AdminSidebar({
+    mobileOpen,
+    setMobileOpen,
+    collapsed,
+    setCollapsed
+}: {
+    mobileOpen: boolean,
+    setMobileOpen: (open: boolean) => void,
+    collapsed: boolean,
+    setCollapsed: (col: boolean) => void
+}) {
     const pathname = usePathname();
     const { user } = useAuth();
-    const [collapsed, setCollapsed] = useState(false);
 
     const toggleSidebar = () => setCollapsed(!collapsed);
+
+    // Auto-collapse on tablet resize if needed, though we can just rely on css classes if handled properly. 
+    // Spec: Tablet 768-1023px Admin sidebar: icon-only collapsed (56px, expands on tap).
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 768 && window.innerWidth < 1024) {
+                setCollapsed(true);
+            } else if (window.innerWidth >= 1024) {
+                setCollapsed(false);
+            }
+        };
+        // Initial check
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [setCollapsed]);
 
     return (
         <>
@@ -40,38 +65,51 @@ export function AdminSidebar({ mobileOpen, setMobileOpen }: { mobileOpen: boolea
 
             {/* Sidebar sidebar */}
             <aside
-                className={`fixed top-0 bottom-0 left-0 z-40 bg-brand-dark text-white shadow-card transition-all duration-300 ease-in-out flex flex-col
-          ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-          ${collapsed ? 'md:w-20' : 'w-64'}
+                className={`fixed top-0 bottom-0 left-0 z-50 bg-brand-dark text-white shadow-card transition-all duration-300 ease-in-out flex flex-col
+          ${mobileOpen ? 'translate-x-0 w-full' : '-translate-x-full md:translate-x-0'}
+          ${collapsed ? 'md:w-[56px]' : 'md:w-[240px]'}
         `}
             >
                 {/* Brand */}
                 <div className="h-16 flex items-center justify-between px-4 border-b border-white/10 shrink-0">
-                    {!collapsed && (
+                    {(!collapsed || mobileOpen) && (
                         <div className="flex items-center gap-2 font-bold text-lg truncate">
                             <Leaf className="h-5 w-5 text-brand-light shrink-0" />
                             <span className="truncate">Taung Ywar Ma</span>
                         </div>
                     )}
-                    {collapsed && (
-                        <div className="flex justify-center w-full">
+                    {collapsed && !mobileOpen && (
+                        <div className="flex justify-center w-full cursor-pointer" onClick={toggleSidebar} aria-label="Expand sidebar">
                             <Leaf className="h-6 w-6 text-brand-light" />
                         </div>
                     )}
+
+                    {/* Desktop/Tablet Toggle */}
                     <button
-                        className="hidden md:flex text-white/70 hover:text-white p-1 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-light"
+                        className="hidden md:flex text-white/70 hover:text-white p-1 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-light min-h-[44px] min-w-[44px] items-center justify-center"
                         onClick={toggleSidebar}
                         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
                     >
                         {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
                     </button>
+
+                    {/* Mobile Close Button */}
+                    <button
+                        className="md:hidden flex text-white/70 hover:text-white p-1 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-light min-h-[44px] min-w-[44px] items-center justify-center"
+                        onClick={() => setMobileOpen(false)}
+                        aria-label="Close menu"
+                    >
+                        <X size={24} />
+                    </button>
                 </div>
 
                 {/* User Summary */}
-                {!collapsed && (
+                {(!collapsed || mobileOpen) && (
                     <div className="p-4 border-b border-white/10 shrink-0">
-                        <div className="text-sm font-medium truncate">{user?.username}</div>
-                        <div className="text-xs text-brand-tint truncate">{user?.roles.join(', ')}</div>
+                        <div className="text-sm font-medium truncate">{user?.username || 'Admin User'}</div>
+                        <div className="text-xs text-brand-tint truncate uppercase">
+                            {user?.roles?.join(', ') || 'ADMIN'}
+                        </div>
                     </div>
                 )}
 
@@ -84,15 +122,21 @@ export function AdminSidebar({ mobileOpen, setMobileOpen }: { mobileOpen: boolea
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                onClick={() => setMobileOpen(false)}
-                                className={`flex items-center gap-3 px-3 py-2.5 rounded-button transition-colors
+                                onClick={() => {
+                                    setMobileOpen(false);
+                                    // if tablet and expanded, auto-collapse on navigation
+                                    if (window.innerWidth >= 768 && window.innerWidth < 1024) {
+                                        setCollapsed(true);
+                                    }
+                                }}
+                                className={`flex items-center gap-3 px-3 py-2.5 rounded-button transition-colors min-h-[44px]
                   ${isActive ? 'bg-brand text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'}
-                  ${collapsed ? 'justify-center' : ''}
+                  ${collapsed && !mobileOpen ? 'justify-center' : ''}
                 `}
                                 title={collapsed ? link.label : undefined}
                             >
                                 <Icon size={20} className="shrink-0" />
-                                {!collapsed && <span className="text-sm font-medium truncate">{link.label}</span>}
+                                {(!collapsed || mobileOpen) && <span className="text-sm font-medium truncate">{link.label}</span>}
                             </Link>
                         );
                     })}

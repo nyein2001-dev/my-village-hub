@@ -46,35 +46,39 @@ export default function AdminOrdersPage() {
             <Card>
                 <CardContent className="p-0">
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm">
-                            <thead className="bg-gray-50 border-b border-border text-text-secondary">
+                        <table className="responsive-table">
+                            <thead>
                                 <tr>
-                                    <th className="px-6 py-4 font-medium whitespace-nowrap">Buyer Name</th>
-                                    <th className="px-6 py-4 font-medium whitespace-nowrap">Contact</th>
-                                    <th className="px-6 py-4 font-medium whitespace-nowrap">Item Requested</th>
-                                    <th className="px-6 py-4 font-medium whitespace-nowrap">Date</th>
-                                    <th className="px-6 py-4 font-medium whitespace-nowrap">Status</th>
-                                    <th className="px-6 py-4 font-medium text-right whitespace-nowrap">Actions</th>
+                                    <th>Buyer Name</th>
+                                    <th>Contact</th>
+                                    <th>Item Requested</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th className="text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-gray-100">
+                            <tbody>
                                 {loading ? (
-                                    <tr><td colSpan={6} className="px-6 py-8 text-center text-text-secondary">Loading...</td></tr>
+                                    <tr><td colSpan={6} className="text-center text-text-secondary py-8 block md:table-cell">Loading...</td></tr>
                                 ) : orders.length === 0 ? (
-                                    <tr><td colSpan={6} className="px-6 py-8 text-center text-text-secondary">No order requests yet.</td></tr>
+                                    <tr><td colSpan={6} className="text-center text-text-secondary py-8 block md:table-cell">No order requests yet.</td></tr>
                                 ) : (
                                     orders.map(order => (
-                                        <tr key={order.id} className="hover:bg-gray-50/50">
-                                            <td className="px-6 py-4 font-medium text-text-primary">{order.buyer_name}</td>
-                                            <td className="px-6 py-4">{order.buyer_phone}</td>
-                                            <td className="px-6 py-4">
-                                                <div className="font-medium text-brand">{order.crop_detail?.name}</div>
-                                                <div className="text-xs text-text-secondary">{order.quantity_requested} {order.crop_detail?.unit}</div>
+                                        <tr key={order.id}>
+                                            <td data-label="Buyer Name" className="font-medium text-text-primary">{order.buyer_name}</td>
+                                            <td data-label="Contact">
+                                                <a href={`tel:${order.buyer_phone}`} className="text-brand hover:underline font-medium">{order.buyer_phone}</a>
                                             </td>
-                                            <td className="px-6 py-4 text-text-secondary">
+                                            <td data-label="Item Requested">
+                                                <div className="flex flex-col items-end md:items-start text-right md:text-left">
+                                                    <div className="font-medium text-brand">{order.crop_detail?.name}</div>
+                                                    <div className="text-xs text-text-secondary">{order.quantity_requested} {order.crop_detail?.unit}</div>
+                                                </div>
+                                            </td>
+                                            <td data-label="Date" className="text-text-secondary">
                                                 {new Date(order.created_at).toLocaleDateString()}
                                             </td>
-                                            <td className="px-6 py-4">
+                                            <td data-label="Status">
                                                 <span className={`px-2 py-1 rounded text-xs font-medium 
                           ${order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                                                         order.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
@@ -84,7 +88,7 @@ export default function AdminOrdersPage() {
                                                     {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-right">
+                                            <td data-label="Actions" className="justify-end gap-2 text-right">
                                                 {order.status === 'pending' && (
                                                     <div className="flex justify-end gap-2">
                                                         <Button variant="ghost" size="sm" onClick={() => updateStatus(order.id, 'confirmed')} className="text-blue-600 hover:bg-blue-50" title="Confirm">

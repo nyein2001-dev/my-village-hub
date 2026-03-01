@@ -47,7 +47,7 @@ export default function AdminGalleryPage() {
             </div>
 
             {loading ? (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {[...Array(8)].map((_, i) => (
                         <div key={i} className="aspect-square bg-white animate-pulse rounded-button"></div>
                     ))}
@@ -57,7 +57,7 @@ export default function AdminGalleryPage() {
                     <p className="text-text-secondary">No photos uploaded to the gallery yet.</p>
                 </Card>
             ) : (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {images.map((img: any) => (
                         <div key={img.id} className="relative group aspect-square bg-gray-50 rounded-button overflow-hidden border border-border">
                             {img.image_detail?.file_path && (

@@ -69,58 +69,58 @@ export default function AdminInfoHubPage() {
 
             <Card>
                 <CardContent className="p-0">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>{activeTab === 'prices' ? 'Crop Name' : 'Title'}</TableHead>
-                                {activeTab === 'prices' && <TableHead>Price</TableHead>}
-                                {activeTab === 'announcements' && <TableHead>Category</TableHead>}
-                                <TableHead>Status</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                    <Table className="responsive-table border-spacing-0 border-0 md:w-full">
+                        <TableHeader className="bg-gray-50 border-b border-border text-text-secondary md:table-header-group hidden">
+                            <TableRow className="border-0">
+                                <TableHead className="font-medium whitespace-nowrap">{activeTab === 'prices' ? 'Crop Name' : 'Title'}</TableHead>
+                                {activeTab === 'prices' && <TableHead className="font-medium whitespace-nowrap">Price</TableHead>}
+                                {activeTab === 'announcements' && <TableHead className="font-medium whitespace-nowrap">Category</TableHead>}
+                                <TableHead className="font-medium whitespace-nowrap">Status</TableHead>
+                                <TableHead className="text-right font-medium whitespace-nowrap">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
-                        <TableBody>
+                        <TableBody className="divide-y divide-gray-100">
                             {loading && (
                                 <TableRow>
-                                    <TableCell colSpan={4} className="text-center py-8">Loading data...</TableCell>
+                                    <TableCell colSpan={4} className="text-center py-8 block md:table-cell text-text-secondary">Loading data...</TableCell>
                                 </TableRow>
                             )}
                             {!loading && activeTab === 'prices' && prices.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={4} className="text-center py-8 text-text-secondary">No market prices recorded yet.</TableCell>
+                                    <TableCell colSpan={4} className="text-center py-8 text-text-secondary block md:table-cell">No market prices recorded yet.</TableCell>
                                 </TableRow>
                             )}
                             {!loading && activeTab === 'announcements' && announcements.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={4} className="text-center py-8 text-text-secondary">No announcements available.</TableCell>
+                                    <TableCell colSpan={4} className="text-center py-8 text-text-secondary block md:table-cell">No announcements available.</TableCell>
                                 </TableRow>
                             )}
 
                             {!loading && activeTab === 'prices' && prices.map((item: any) => (
-                                <TableRow key={item.id}>
-                                    <TableCell className="font-medium">{item.crop_name}</TableCell>
-                                    <TableCell>{item.price} per {item.unit}</TableCell>
-                                    <TableCell>
+                                <TableRow key={item.id} className="hover:bg-gray-50/50">
+                                    <TableCell data-label="Crop Name" className="font-medium text-text-primary">{item.crop_name}</TableCell>
+                                    <TableCell data-label="Price">{item.price} per {item.unit}</TableCell>
+                                    <TableCell data-label="Status">
                                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${item.is_published ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                                             {item.is_published ? 'Published' : 'Draft'}
                                         </span>
                                     </TableCell>
-                                    <TableCell className="text-right space-x-2">
+                                    <TableCell data-label="Actions" className="justify-end space-x-2 text-right">
                                         <Button size="sm" variant="outline">Edit</Button>
                                     </TableCell>
                                 </TableRow>
                             ))}
 
                             {!loading && activeTab === 'announcements' && announcements.map((item: any) => (
-                                <TableRow key={item.id}>
-                                    <TableCell className="font-medium">{item.title}</TableCell>
-                                    <TableCell className="capitalize">{item.category}</TableCell>
-                                    <TableCell>
+                                <TableRow key={item.id} className="hover:bg-gray-50/50">
+                                    <TableCell data-label="Title" className="font-medium text-text-primary">{item.title}</TableCell>
+                                    <TableCell data-label="Category" className="capitalize">{item.category}</TableCell>
+                                    <TableCell data-label="Status">
                                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${item.is_published ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                                             {item.is_published ? 'Published' : 'Draft'}
                                         </span>
                                     </TableCell>
-                                    <TableCell className="text-right space-x-2">
+                                    <TableCell data-label="Actions" className="justify-end space-x-2 text-right">
                                         <Button size="sm" variant="outline">Edit</Button>
                                     </TableCell>
                                 </TableRow>
