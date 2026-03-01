@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import {
     LayoutDashboard, ShoppingCart, Users, Leaf,
     MapPin, BookOpen, AlertTriangle, Image as ImageIcon,
-    ChevronLeft, ChevronRight, Menu
+    ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -40,7 +40,7 @@ export function AdminSidebar({ mobileOpen, setMobileOpen }: { mobileOpen: boolea
 
             {/* Sidebar sidebar */}
             <aside
-                className={`fixed top-0 bottom-0 left-0 z-40 bg-brand-dark text-white shadow-xl transition-all duration-300 ease-in-out flex flex-col
+                className={`fixed top-0 bottom-0 left-0 z-40 bg-brand-dark text-white shadow-card transition-all duration-300 ease-in-out flex flex-col
           ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
           ${collapsed ? 'md:w-20' : 'w-64'}
         `}
@@ -84,7 +84,7 @@ export function AdminSidebar({ mobileOpen, setMobileOpen }: { mobileOpen: boolea
                                 key={link.href}
                                 href={link.href}
                                 onClick={() => setMobileOpen(false)}
-                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors
+                                className={`flex items-center gap-3 px-3 py-2.5 rounded-button transition-colors
                   ${isActive ? 'bg-brand text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'}
                   ${collapsed ? 'justify-center' : ''}
                 `}

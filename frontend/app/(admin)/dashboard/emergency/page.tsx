@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -31,15 +32,15 @@ export default function AdminEmergencyContactsPage() {
     }, [user]);
 
     if (!user || !user.roles?.includes(UserRole.ADMIN)) {
-        return <div className="p-8 text-center text-red-500">You must be an Administrator to access Emergency Contacts.</div>;
+        return <div className="p-8 text-center text-error">You must be an Administrator to access Emergency Contacts.</div>;
     }
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-text-main">Emergency Contacts Management</h1>
-                    <p className="text-text-muted mt-1">Manage village emergency service numbers and key persons.</p>
+                    <h1 className="text-2xl font-bold text-text-primary">Emergency Contacts Management</h1>
+                    <p className="text-text-secondary mt-1">Manage village emergency service numbers and key persons.</p>
                 </div>
                 <Button>Add New Contact</Button>
             </div>
@@ -64,7 +65,7 @@ export default function AdminEmergencyContactsPage() {
                             )}
                             {!loading && contacts.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center py-8 text-text-muted">No emergency contacts recorded yet.</TableCell>
+                                    <TableCell colSpan={5} className="text-center py-8 text-text-secondary">No emergency contacts recorded yet.</TableCell>
                                 </TableRow>
                             )}
 

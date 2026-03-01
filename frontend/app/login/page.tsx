@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
@@ -14,7 +14,6 @@ export default function LoginPage() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const { login, isLoading } = useAuth();
-    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -29,7 +28,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-surface-muted p-4">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
             <Link href="/" className="absolute top-8 left-8 flex items-center gap-2 text-brand-dark font-bold text-xl hover:text-brand transition-colors">
                 <Leaf className="h-6 w-6" />
                 <span>Taung Ywar Ma</span>
@@ -39,11 +38,11 @@ export default function LoginPage() {
                 <Card>
                     <CardHeader className="text-center pb-2">
                         <CardTitle className="text-2xl">Admin Login</CardTitle>
-                        <p className="text-sm text-text-muted mt-2">Sign in to access the community management console</p>
+                        <p className="text-sm text-text-secondary mt-2">Sign in to access the community management console</p>
                     </CardHeader>
                     <CardContent>
                         {error && (
-                            <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4 border border-red-100">
+                            <div className="bg-red-50 text-error p-3 rounded-lg text-sm mb-4 border border-red-100">
                                 {error}
                             </div>
                         )}

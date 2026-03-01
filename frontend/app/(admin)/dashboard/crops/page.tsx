@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -5,8 +6,7 @@ import { api } from '@/lib/api/axios';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { useAuth } from '@/hooks/useAuth';
-import { Plus, Trash2, Edit } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 
 export default function AdminCropsPage() {
@@ -73,7 +73,7 @@ export default function AdminCropsPage() {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-text-main">Crops Management</h1>
+                <h1 className="text-2xl font-bold text-text-primary">Crops Management</h1>
                 <Button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2">
                     <Plus size={16} /> Add Crop
                 </Button>
@@ -83,7 +83,7 @@ export default function AdminCropsPage() {
                 <CardContent className="p-0">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm whitespace-nowrap">
-                            <thead className="bg-surface-muted border-b border-gray-100 text-text-muted">
+                            <thead className="bg-gray-50 border-b border-border text-text-secondary">
                                 <tr>
                                     <th className="px-6 py-4 font-medium">Crop Name</th>
                                     <th className="px-6 py-4 font-medium">Category</th>
@@ -95,13 +95,13 @@ export default function AdminCropsPage() {
                             </thead>
                             <tbody className="divide-y divide-gray-100">
                                 {loading ? (
-                                    <tr><td colSpan={6} className="px-6 py-8 text-center text-text-muted">Loading...</td></tr>
+                                    <tr><td colSpan={6} className="px-6 py-8 text-center text-text-secondary">Loading...</td></tr>
                                 ) : crops.length === 0 ? (
-                                    <tr><td colSpan={6} className="px-6 py-8 text-center text-text-muted">No crops found. Add one to get started.</td></tr>
+                                    <tr><td colSpan={6} className="px-6 py-8 text-center text-text-secondary">No crops found. Add one to get started.</td></tr>
                                 ) : (
                                     crops.map(crop => (
                                         <tr key={crop.id} className="hover:bg-gray-50/50">
-                                            <td className="px-6 py-4 font-medium text-text-main">{crop.name}</td>
+                                            <td className="px-6 py-4 font-medium text-text-primary">{crop.name}</td>
                                             <td className="px-6 py-4">{crop.category}</td>
                                             <td className="px-6 py-4">{crop.farmer_detail?.full_name}</td>
                                             <td className="px-6 py-4">{crop.quantity_available} {crop.unit}</td>
@@ -111,7 +111,7 @@ export default function AdminCropsPage() {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-right">
-                                                <Button variant="ghost" size="sm" onClick={() => handleDelete(crop.id)} className="text-red-500 hover:text-red-700 hover:bg-red-50">
+                                                <Button variant="ghost" size="sm" onClick={() => handleDelete(crop.id)} className="text-error hover:text-red-700 hover:bg-red-50">
                                                     <Trash2 size={16} />
                                                 </Button>
                                             </td>
@@ -129,9 +129,9 @@ export default function AdminCropsPage() {
                     <div className="grid grid-cols-2 gap-4">
                         <Input label="Crop Name *" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
                         <div className="space-y-1">
-                            <label className="block text-sm font-medium text-text-main">Category *</label>
+                            <label className="block text-sm font-medium text-text-primary">Category *</label>
                             <select
-                                className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
+                                className="w-full border border-border rounded-button px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
                                 value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}
                             >
                                 <option value="Vegetables">Vegetables</option>
@@ -144,9 +144,9 @@ export default function AdminCropsPage() {
                     </div>
 
                     <div className="space-y-1">
-                        <label className="block text-sm font-medium text-text-main">Farmer *</label>
+                        <label className="block text-sm font-medium text-text-primary">Farmer *</label>
                         <select
-                            className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
+                            className="w-full border border-border rounded-button px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
                             required
                             value={formData.farmer} onChange={e => setFormData({ ...formData, farmer: e.target.value })}
                         >
@@ -155,7 +155,7 @@ export default function AdminCropsPage() {
                                 <option key={f.id} value={f.id}>{f.full_name}</option>
                             ))}
                         </select>
-                        {farmers.length === 0 && <p className="text-xs text-red-500 mt-1">You must create a Farmer profile first before adding crops.</p>}
+                        {farmers.length === 0 && <p className="text-xs text-error mt-1">You must create a Farmer profile first before adding crops.</p>}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -164,9 +164,9 @@ export default function AdminCropsPage() {
                     </div>
 
                     <div className="space-y-1">
-                        <label className="block text-sm font-medium text-text-main">Description</label>
+                        <label className="block text-sm font-medium text-text-primary">Description</label>
                         <textarea
-                            className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
+                            className="w-full border border-border rounded-button px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
                             rows={3} value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })}
                         ></textarea>
                     </div>

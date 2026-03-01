@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -64,7 +65,7 @@ export default function AdminFarmersPage() {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-text-main">Farmers Management</h1>
+                <h1 className="text-2xl font-bold text-text-primary">Farmers Management</h1>
                 <Button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2">
                     <Plus size={16} /> Add Farmer
                 </Button>
@@ -74,7 +75,7 @@ export default function AdminFarmersPage() {
                 <CardContent className="p-0">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm whitespace-nowrap">
-                            <thead className="bg-surface-muted border-b border-gray-100 text-text-muted">
+                            <thead className="bg-gray-50 border-b border-border text-text-secondary">
                                 <tr>
                                     <th className="px-6 py-4 font-medium">Full Name</th>
                                     <th className="px-6 py-4 font-medium">Area</th>
@@ -85,13 +86,13 @@ export default function AdminFarmersPage() {
                             </thead>
                             <tbody className="divide-y divide-gray-100">
                                 {loading ? (
-                                    <tr><td colSpan={5} className="px-6 py-8 text-center text-text-muted">Loading...</td></tr>
+                                    <tr><td colSpan={5} className="px-6 py-8 text-center text-text-secondary">Loading...</td></tr>
                                 ) : farmers.length === 0 ? (
-                                    <tr><td colSpan={5} className="px-6 py-8 text-center text-text-muted">No farmer profiles found. Add one to get started.</td></tr>
+                                    <tr><td colSpan={5} className="px-6 py-8 text-center text-text-secondary">No farmer profiles found. Add one to get started.</td></tr>
                                 ) : (
                                     farmers.map(farmer => (
                                         <tr key={farmer.id} className={`hover:bg-gray-50/50 ${!farmer.is_active ? 'opacity-60' : ''}`}>
-                                            <td className="px-6 py-4 font-medium text-text-main">{farmer.full_name}</td>
+                                            <td className="px-6 py-4 font-medium text-text-primary">{farmer.full_name}</td>
                                             <td className="px-6 py-4">{farmer.village_area}</td>
                                             <td className="px-6 py-4">{farmer.phone}</td>
                                             <td className="px-6 py-4">
@@ -101,7 +102,7 @@ export default function AdminFarmersPage() {
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 {farmer.is_active && (
-                                                    <Button variant="ghost" size="sm" onClick={() => handleDelete(farmer.id)} className="text-red-500 hover:text-red-700 hover:bg-red-50" title="Deactivate">
+                                                    <Button variant="ghost" size="sm" onClick={() => handleDelete(farmer.id)} className="text-error hover:text-red-700 hover:bg-red-50" title="Deactivate">
                                                         <Trash2 size={16} />
                                                     </Button>
                                                 )}
@@ -118,9 +119,9 @@ export default function AdminFarmersPage() {
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create Farmer Profile">
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-1">
-                        <label className="block text-sm font-medium text-text-main">Link to Account *</label>
+                        <label className="block text-sm font-medium text-text-primary">Link to Account *</label>
                         <select
-                            className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
+                            className="w-full border border-border rounded-button px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
                             required
                             value={formData.user} onChange={e => setFormData({ ...formData, user: e.target.value })}
                         >
@@ -138,9 +139,9 @@ export default function AdminFarmersPage() {
                     <Input label="Village Area / Location *" required value={formData.village_area} onChange={e => setFormData({ ...formData, village_area: e.target.value })} placeholder="e.g. North Zone, Farm Plot 12" />
 
                     <div className="space-y-1">
-                        <label className="block text-sm font-medium text-text-main">Biography (Optional)</label>
+                        <label className="block text-sm font-medium text-text-primary">Biography (Optional)</label>
                         <textarea
-                            className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
+                            className="w-full border border-border rounded-button px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
                             rows={3} value={formData.bio} onChange={e => setFormData({ ...formData, bio: e.target.value })}
                         ></textarea>
                     </div>

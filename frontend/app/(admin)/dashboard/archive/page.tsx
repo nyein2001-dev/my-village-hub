@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -37,28 +38,28 @@ export default function AdminArchivePage() {
     }, [user]);
 
     if (!user || (!user.roles?.includes(UserRole.ADMIN) && !user.roles?.includes(UserRole.CONTENT_EDITOR))) {
-        return <div className="p-8 text-center text-red-500">You do not have permission to access the archive CMS.</div>;
+        return <div className="p-8 text-center text-error">You do not have permission to access the archive CMS.</div>;
     }
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-text-main">Digital Archive Management</h1>
-                    <p className="text-text-muted mt-1">Manage village festivals, youth blogs, and history records.</p>
+                    <h1 className="text-2xl font-bold text-text-primary">Digital Archive Management</h1>
+                    <p className="text-text-secondary mt-1">Manage village festivals, youth blogs, and history records.</p>
                 </div>
                 <Button>Add New {activeTab === 'festivals' ? 'Festival' : 'Blog'}</Button>
             </div>
 
-            <div className="flex space-x-4 border-b border-gray-200">
+            <div className="flex space-x-4 border-b border-border">
                 <button
-                    className={`pb-2 px-2 text-sm font-medium border-b-2 ${activeTab === 'festivals' ? 'border-brand text-brand' : 'border-transparent text-text-muted hover:text-text-main'}`}
+                    className={`pb-2 px-2 text-sm font-medium border-b-2 ${activeTab === 'festivals' ? 'border-brand text-brand' : 'border-transparent text-text-secondary hover:text-text-primary'}`}
                     onClick={() => setActiveTab('festivals')}
                 >
                     Festivals
                 </button>
                 <button
-                    className={`pb-2 px-2 text-sm font-medium border-b-2 ${activeTab === 'blogs' ? 'border-brand text-brand' : 'border-transparent text-text-muted hover:text-text-main'}`}
+                    className={`pb-2 px-2 text-sm font-medium border-b-2 ${activeTab === 'blogs' ? 'border-brand text-brand' : 'border-transparent text-text-secondary hover:text-text-primary'}`}
                     onClick={() => setActiveTab('blogs')}
                 >
                     Youth Blogs
@@ -84,12 +85,12 @@ export default function AdminArchivePage() {
                             )}
                             {!loading && activeTab === 'festivals' && festivals.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={4} className="text-center py-8 text-text-muted">No festivals recorded yet.</TableCell>
+                                    <TableCell colSpan={4} className="text-center py-8 text-text-secondary">No festivals recorded yet.</TableCell>
                                 </TableRow>
                             )}
                             {!loading && activeTab === 'blogs' && blogs.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={4} className="text-center py-8 text-text-muted">No blog posts available.</TableCell>
+                                    <TableCell colSpan={4} className="text-center py-8 text-text-secondary">No blog posts available.</TableCell>
                                 </TableRow>
                             )}
 

@@ -53,16 +53,16 @@ export default function DashboardHome() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-text-main">
+                <h1 className="text-2xl font-bold text-text-primary">
                     Welcome back, {user?.username || 'Admin'}
                 </h1>
-                <p className="text-text-muted mt-1">Here is the overview of your village platform today.</p>
+                <p className="text-text-secondary mt-1">Here is the overview of your village platform today.</p>
             </div>
 
             {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {[...Array(4)].map((_, i) => (
-                        <div key={i} className="h-32 bg-surface animate-pulse rounded-2xl shadow-sm border border-gray-100"></div>
+                        <div key={i} className="h-32 bg-white animate-pulse rounded-card shadow-sm border border-border"></div>
                     ))}
                 </div>
             ) : (
@@ -74,8 +74,8 @@ export default function DashboardHome() {
                                 <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
                                     <CardContent className="p-6 flex items-center justify-between">
                                         <div>
-                                            <p className="text-sm font-medium text-text-muted mb-1">{stat.title}</p>
-                                            <h3 className="text-3xl font-bold text-text-main">{stat.value}</h3>
+                                            <p className="text-sm font-medium text-text-secondary mb-1">{stat.title}</p>
+                                            <h3 className="text-3xl font-bold text-text-primary">{stat.value}</h3>
                                         </div>
                                         <div className={`w-12 h-12 rounded-full flex items-center justify-center ${stat.bg}`}>
                                             <Icon className={`w-6 h-6 ${stat.color}`} />
@@ -91,12 +91,12 @@ export default function DashboardHome() {
             {/* Quick Activity Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
                 <Card>
-                    <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+                    <div className="p-6 border-b border-border flex justify-between items-center">
                         <h2 className="font-bold text-lg">Recent Order Requests</h2>
                         <Link href="/dashboard/orders" className="text-sm text-brand font-medium hover:underline">View All</Link>
                     </div>
                     <CardContent className="p-0">
-                        <div className="p-6 text-center text-text-muted text-sm">
+                        <div className="p-6 text-center text-text-secondary text-sm">
                             Managing orders helps connect farmers to markets efficiently.
                             Access the full orders list to view details and update statuses.
                         </div>
@@ -104,21 +104,21 @@ export default function DashboardHome() {
                 </Card>
 
                 <Card>
-                    <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+                    <div className="p-6 border-b border-border flex justify-between items-center">
                         <h2 className="font-bold text-lg">System Quick Links</h2>
                     </div>
                     <CardContent className="p-6">
                         <div className="grid grid-cols-2 gap-4">
-                            <Link href="/dashboard/archive" className="p-4 bg-surface-muted rounded-xl hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-main">
+                            <Link href="/dashboard/archive" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
                                 <span>🏛️</span> Manage Digital Archive
                             </Link>
-                            <Link href="/dashboard/info" className="p-4 bg-surface-muted rounded-xl hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-main">
+                            <Link href="/dashboard/info" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
                                 <span>📢</span> Post Announcement
                             </Link>
-                            <Link href="/dashboard/emergency" className="p-4 bg-surface-muted rounded-xl hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-main">
+                            <Link href="/dashboard/emergency" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
                                 <span>🚨</span> Update Contacts
                             </Link>
-                            <Link href="/dashboard/farmers" className="p-4 bg-surface-muted rounded-xl hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-main">
+                            <Link href="/dashboard/farmers" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
                                 <span>👤</span> Add New Farmer
                             </Link>
                         </div>

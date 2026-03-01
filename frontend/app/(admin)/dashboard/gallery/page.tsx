@@ -1,8 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api/axios';
-import { Card, CardContent } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
 import { UserRole } from '@/types/roles';
@@ -30,15 +32,15 @@ export default function AdminGalleryPage() {
     }, [user]);
 
     if (!user || (!user.roles?.includes(UserRole.ADMIN) && !user.roles?.includes(UserRole.CONTENT_EDITOR))) {
-        return <div className="p-8 text-center text-red-500">You must be an Administrator or Content Editor to manage the gallery.</div>;
+        return <div className="p-8 text-center text-error">You must be an Administrator or Content Editor to manage the gallery.</div>;
     }
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-text-main">Photo Gallery Management</h1>
-                    <p className="text-text-muted mt-1">Upload and manage village photos.</p>
+                    <h1 className="text-2xl font-bold text-text-primary">Photo Gallery Management</h1>
+                    <p className="text-text-secondary mt-1">Upload and manage village photos.</p>
                 </div>
                 <Button>Upload New Photo</Button>
             </div>
@@ -46,17 +48,17 @@ export default function AdminGalleryPage() {
             {loading ? (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[...Array(8)].map((_, i) => (
-                        <div key={i} className="aspect-square bg-surface animate-pulse rounded-xl"></div>
+                        <div key={i} className="aspect-square bg-white animate-pulse rounded-button"></div>
                     ))}
                 </div>
             ) : images.length === 0 ? (
                 <Card className="text-center py-12">
-                    <p className="text-text-muted">No photos uploaded to the gallery yet.</p>
+                    <p className="text-text-secondary">No photos uploaded to the gallery yet.</p>
                 </Card>
             ) : (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {images.map((img: any) => (
-                        <div key={img.id} className="relative group aspect-square bg-surface-muted rounded-xl overflow-hidden border border-gray-200">
+                        <div key={img.id} className="relative group aspect-square bg-gray-50 rounded-button overflow-hidden border border-border">
                             {img.image_detail?.file_path && (
                                 <img
                                     src={img.image_detail.file_path}

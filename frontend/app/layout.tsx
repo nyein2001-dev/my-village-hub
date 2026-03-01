@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`font-sans antialiased bg-surface-muted text-text-main flex flex-col min-h-screen`}>
+            <body className={`font-sans antialiased bg-gray-50 text-text-primary flex flex-col min-h-screen`}>
                 <ClientProviders>
                     {children}
                 </ClientProviders>

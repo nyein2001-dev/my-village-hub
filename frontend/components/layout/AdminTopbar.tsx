@@ -8,15 +8,15 @@ export function AdminTopbar({ toggleMobileSidebar }: { toggleMobileSidebar: () =
     const { logout } = useAuth();
 
     return (
-        <header className="h-16 bg-surface shadow-sm border-b border-gray-200 flex items-center justify-between px-4 lg:px-6 z-30 sticky top-0">
+        <header className="h-16 bg-white shadow-sm border-b border-border flex items-center justify-between px-4 lg:px-6 z-30 sticky top-0">
             <div className="flex items-center gap-4">
                 <button
-                    className="md:hidden text-text-muted hover:text-text-main p-1 rounded-md"
+                    className="md:hidden text-text-secondary hover:text-text-primary p-1 rounded-md"
                     onClick={toggleMobileSidebar}
                 >
                     <Menu className="h-6 w-6" />
                 </button>
-                <h1 className="text-xl font-semibold text-text-main hidden sm:block">Admin Console</h1>
+                <h1 className="text-xl font-semibold text-text-primary hidden sm:block">Admin Console</h1>
             </div>
 
             <div className="flex items-center gap-4">
@@ -24,7 +24,7 @@ export function AdminTopbar({ toggleMobileSidebar }: { toggleMobileSidebar: () =
                     variant="ghost"
                     size="sm"
                     onClick={logout}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="text-error hover:text-red-700 hover:bg-red-50"
                 >
                     <LogOut className="h-4 w-4 mr-2" />
                     <span className="hidden sm:inline">Sign Out</span>

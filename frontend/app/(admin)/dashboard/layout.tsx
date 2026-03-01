@@ -19,7 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     if (isLoading || !isAuthenticated) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-surface-muted">
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="animate-spin h-8 w-8 border-4 border-brand border-t-transparent rounded-full"></div>
             </div>
         );
@@ -31,14 +31,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
 
     return (
-        <div className="min-h-screen bg-surface-muted flex">
+        <div className="min-h-screen bg-gray-50 flex">
             <AdminSidebar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
 
             {/* Main Content Wrapper - adjust margin based on responsive sidebar */}
             <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 md:ml-64`}>
                 <AdminTopbar toggleMobileSidebar={() => setMobileOpen(true)} />
 
-                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-surface-muted p-4 md:p-6 lg:p-8">
+                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4 md:p-6 lg:p-8">
                     <div className="mx-auto max-w-7xl">
                         {children}
                     </div>

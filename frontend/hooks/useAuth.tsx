@@ -23,19 +23,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const router = useRouter();
 
     useEffect(() => {
-        // Check local storage for initial auth state
-        const storedUser = localStorage.getItem('user');
-        const token = localStorage.getItem('access_token');
+        const initAuth = () => {
+            const storedUser = localStorage.getItem('user');
+            const token = localStorage.getItem('access_token');
 
-        if (storedUser && token) {
-            try {
-                setUser(JSON.parse(storedUser));
-            } catch (e) {
-                console.error('Invalid user data in local storage', e);
+            if (storedUser && token) {
+                try {
+                    setUser(JSON.parse(storedUser));
+                } catch (e) {
+                    console.error('Invalid user data in local storage', e);
+                }
             }
-        }
 
-        setIsLoading(false);
+            setIsLoading(false);
+        };
+
+        initAuth();
 
         // Listen for auth-expired events from interceptor
         const handleAuthExpired = () => {

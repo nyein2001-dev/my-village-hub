@@ -1,8 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api/axios';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/Card';
+import { Card, CardContent, CardFooter } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
@@ -91,8 +92,8 @@ export default function CropsPage() {
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="mb-8 pl-4 border-l-4 border-brand">
-                <h1 className="text-3xl font-bold text-text-main">Marketplace Directory</h1>
-                <p className="text-text-muted mt-2">Browse the finest seasonal crops directly from our village farmers.</p>
+                <h1 className="text-3xl font-bold text-text-primary">Marketplace Directory</h1>
+                <p className="text-text-secondary mt-2">Browse the finest seasonal crops directly from our village farmers.</p>
             </div>
 
             {loading ? (
@@ -100,16 +101,16 @@ export default function CropsPage() {
                     <div className="animate-spin h-8 w-8 border-4 border-brand border-t-transparent rounded-full"></div>
                 </div>
             ) : error ? (
-                <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100">{error}</div>
+                <div className="bg-red-50 text-error p-4 rounded-button border border-red-100">{error}</div>
             ) : crops.length === 0 ? (
-                <div className="bg-surface p-12 rounded-2xl text-center shadow-sm border border-gray-100">
-                    <h3 className="text-lg font-medium text-text-main mb-2">No crops currently listed</h3>
-                    <p className="text-text-muted">Please check back later as our farmers update their seasonal harvest.</p>
+                <div className="bg-white p-12 rounded-card text-center shadow-sm border border-border">
+                    <h3 className="text-lg font-medium text-text-primary mb-2">No crops currently listed</h3>
+                    <p className="text-text-secondary">Please check back later as our farmers update their seasonal harvest.</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {crops.map((crop) => (
-                        <Card key={crop.id} className="flex flex-col h-full hover:shadow-lg transition-shadow">
+                        <Card key={crop.id} className="flex flex-col h-full hover:shadow-card transition-shadow">
                             {crop.image_detail ? (
                                 <div className="h-48 w-full bg-gray-200 relative overflow-hidden shrink-0">
                                     {/* Fallback to gray box if no real image system is configured yet */}
@@ -123,27 +124,27 @@ export default function CropsPage() {
 
                             <CardContent className="flex-grow pt-5">
                                 <div className="flex justify-between items-start mb-2">
-                                    <h2 className="text-xl font-bold text-text-main line-clamp-1">{crop.name}</h2>
+                                    <h2 className="text-xl font-bold text-text-primary line-clamp-1">{crop.name}</h2>
                                     <span className="bg-brand-tint text-brand text-xs px-2 py-1 rounded-full font-medium shrink-0">
                                         {crop.category}
                                     </span>
                                 </div>
 
-                                <p className="text-text-muted text-sm line-clamp-2 mb-4">
+                                <p className="text-text-secondary text-sm line-clamp-2 mb-4">
                                     {crop.description}
                                 </p>
 
                                 <div className="space-y-2 text-sm">
-                                    <div className="flex items-center text-text-main">
+                                    <div className="flex items-center text-text-primary">
                                         <Scale className="h-4 w-4 mr-2 text-gray-400" />
                                         <span className="font-medium">Available:</span>
                                         <span className="ml-1">{crop.quantity_available} {crop.unit}</span>
                                     </div>
-                                    <div className="flex items-center text-text-main">
+                                    <div className="flex items-center text-text-primary">
                                         <MapPin className="h-4 w-4 mr-2 text-gray-400" />
                                         <span>{crop.farmer_detail?.village_area || 'Village Farm'}</span>
                                     </div>
-                                    <div className="text-text-muted text-xs mt-2 pt-2 border-t border-gray-100">
+                                    <div className="text-text-secondary text-xs mt-2 pt-2 border-t border-border">
                                         Farmer: {crop.farmer_detail?.full_name}
                                     </div>
                                 </div>
@@ -171,12 +172,12 @@ export default function CropsPage() {
                             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                         </div>
                         <h3 className="text-xl font-bold mb-2">Success!</h3>
-                        <p className="text-text-muted mb-6">Your order request has been submitted. The farmer will contact you shortly via phone.</p>
+                        <p className="text-text-secondary mb-6">Your order request has been submitted. The farmer will contact you shortly via phone.</p>
                         <Button onClick={() => setIsModalOpen(false)}>Back to Marketplace</Button>
                     </div>
                 ) : (
                     <form onSubmit={handleOrderSubmit} className="space-y-4">
-                        <p className="text-sm text-text-muted mb-4">
+                        <p className="text-sm text-text-secondary mb-4">
                             You are requesting to buy <strong>{selectedCrop?.name}</strong> from <strong>{selectedCrop?.farmer_detail?.full_name}</strong>.
                             (Available: {selectedCrop?.quantity_available} {selectedCrop?.unit})
                         </p>
@@ -212,9 +213,9 @@ export default function CropsPage() {
                         />
 
                         <div className="flex flex-col space-y-1">
-                            <label className="block text-sm font-medium text-text-main">Additional Notes (Optional)</label>
+                            <label className="block text-sm font-medium text-text-primary">Additional Notes (Optional)</label>
                             <textarea
-                                className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-brand-light focus:border-brand-light outline-none transition-shadow"
+                                className="w-full border border-border rounded-button px-4 py-2 focus:ring-2 focus:ring-brand-light focus:border-brand-light outline-none transition-shadow"
                                 rows={3}
                                 value={notes}
                                 onChange={e => setNotes(e.target.value)}

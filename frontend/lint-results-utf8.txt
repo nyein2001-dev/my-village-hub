@@ -1,0 +1,83 @@
+﻿
+> frontend@0.1.0 lint
+> eslint
+
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\app\(admin)\dashboard\archive\page.tsx
+   96:92  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  111:84  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\app\(admin)\dashboard\crops\page.tsx
+   8:10  warning  'useAuth' is defined but never used       @typescript-eslint/no-unused-vars
+   9:24  warning  'Edit' is defined but never used          @typescript-eslint/no-unused-vars
+  13:40  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  14:44  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\app\(admin)\dashboard\emergency\page.tsx
+  71:62  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\app\(admin)\dashboard\farmers\page.tsx
+  12:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  13:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\app\(admin)\dashboard\gallery\page.tsx
+   5:16  warning  'CardContent' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  58:39  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  61:33  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\app\(admin)\dashboard\info\page.tsx
+   97:86   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  112:100  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\app\(admin)\dashboard\orders\page.tsx
+  10:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\app\(public)\archive\page.tsx
+    5:29  warning  'CardHeader' is defined but never used                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+    5:41  warning  'CardTitle' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+    5:52  warning  'CardFooter' is defined but never used                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+   79:45  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  109:45  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\app\(public)\crops\page.tsx
+    5:29  warning  'CardHeader' is defined but never used                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+    5:41  warning  'CardTitle' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+  116:37  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\app\(public)\page.tsx
+  92:74  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\app\login\page.tsx
+  17:11  warning  'router' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  26:23  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\components\layout\AdminSidebar.tsx
+  9:32  warning  'Menu' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\components\ui\Button.tsx
+  12:13  error  'baseStyles' is never reassigned. Use 'const' instead  prefer-const
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\components\ui\Modal.tsx
+  2:10  warning  'Button' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\hooks\useAuth.tsx
+  32:17  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\dell\StudioProjects\my-village-hub\frontend\hooks\useAuth.tsx:32:17
+  30 |         if (storedUser && token) {
+  31 |             try {
+> 32 |                 setUser(JSON.parse(storedUser));
+     |                 ^^^^^^^ Avoid calling setState() directly within an effect
+  33 |             } catch (e) {
+  34 |                 console.error('Invalid user data in local storage', e);
+  35 |             }  react-hooks/set-state-in-effect
+
+Γ£û 30 problems (15 errors, 15 warnings)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+

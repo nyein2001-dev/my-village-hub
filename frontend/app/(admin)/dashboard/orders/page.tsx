@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -38,14 +39,14 @@ export default function AdminOrdersPage() {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-text-main">Order Requests</h1>
+                <h1 className="text-2xl font-bold text-text-primary">Order Requests</h1>
             </div>
 
             <Card>
                 <CardContent className="p-0">
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm">
-                            <thead className="bg-surface-muted border-b border-gray-100 text-text-muted">
+                            <thead className="bg-gray-50 border-b border-border text-text-secondary">
                                 <tr>
                                     <th className="px-6 py-4 font-medium whitespace-nowrap">Buyer Name</th>
                                     <th className="px-6 py-4 font-medium whitespace-nowrap">Contact</th>
@@ -57,19 +58,19 @@ export default function AdminOrdersPage() {
                             </thead>
                             <tbody className="divide-y divide-gray-100">
                                 {loading ? (
-                                    <tr><td colSpan={6} className="px-6 py-8 text-center text-text-muted">Loading...</td></tr>
+                                    <tr><td colSpan={6} className="px-6 py-8 text-center text-text-secondary">Loading...</td></tr>
                                 ) : orders.length === 0 ? (
-                                    <tr><td colSpan={6} className="px-6 py-8 text-center text-text-muted">No order requests yet.</td></tr>
+                                    <tr><td colSpan={6} className="px-6 py-8 text-center text-text-secondary">No order requests yet.</td></tr>
                                 ) : (
                                     orders.map(order => (
                                         <tr key={order.id} className="hover:bg-gray-50/50">
-                                            <td className="px-6 py-4 font-medium text-text-main">{order.buyer_name}</td>
+                                            <td className="px-6 py-4 font-medium text-text-primary">{order.buyer_name}</td>
                                             <td className="px-6 py-4">{order.buyer_phone}</td>
                                             <td className="px-6 py-4">
                                                 <div className="font-medium text-brand">{order.crop_detail?.name}</div>
-                                                <div className="text-xs text-text-muted">{order.quantity_requested} {order.crop_detail?.unit}</div>
+                                                <div className="text-xs text-text-secondary">{order.quantity_requested} {order.crop_detail?.unit}</div>
                                             </td>
-                                            <td className="px-6 py-4 text-text-muted">
+                                            <td className="px-6 py-4 text-text-secondary">
                                                 {new Date(order.created_at).toLocaleDateString()}
                                             </td>
                                             <td className="px-6 py-4">
@@ -88,7 +89,7 @@ export default function AdminOrdersPage() {
                                                         <Button variant="ghost" size="sm" onClick={() => updateStatus(order.id, 'confirmed')} className="text-blue-600 hover:bg-blue-50" title="Confirm">
                                                             <CheckCircle size={16} />
                                                         </Button>
-                                                        <Button variant="ghost" size="sm" onClick={() => updateStatus(order.id, 'cancelled')} className="text-red-500 hover:bg-red-50" title="Cancel">
+                                                        <Button variant="ghost" size="sm" onClick={() => updateStatus(order.id, 'cancelled')} className="text-error hover:bg-red-50" title="Cancel">
                                                             <XCircle size={16} />
                                                         </Button>
                                                     </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -37,28 +38,28 @@ export default function AdminInfoHubPage() {
     }, [user]);
 
     if (!user || (!user.roles?.includes(UserRole.ADMIN) && !user.roles?.includes(UserRole.CONTENT_EDITOR))) {
-        return <div className="p-8 text-center text-red-500">You do not have permission to access the Info Hub CMS.</div>;
+        return <div className="p-8 text-center text-error">You do not have permission to access the Info Hub CMS.</div>;
     }
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-text-main">Information Hub Management</h1>
-                    <p className="text-text-muted mt-1">Manage market prices and village announcements.</p>
+                    <h1 className="text-2xl font-bold text-text-primary">Information Hub Management</h1>
+                    <p className="text-text-secondary mt-1">Manage market prices and village announcements.</p>
                 </div>
                 <Button>Add New {activeTab === 'prices' ? 'Market Price' : 'Announcement'}</Button>
             </div>
 
-            <div className="flex space-x-4 border-b border-gray-200">
+            <div className="flex space-x-4 border-b border-border">
                 <button
-                    className={`pb-2 px-2 text-sm font-medium border-b-2 ${activeTab === 'prices' ? 'border-brand text-brand' : 'border-transparent text-text-muted hover:text-text-main'}`}
+                    className={`pb-2 px-2 text-sm font-medium border-b-2 ${activeTab === 'prices' ? 'border-brand text-brand' : 'border-transparent text-text-secondary hover:text-text-primary'}`}
                     onClick={() => setActiveTab('prices')}
                 >
                     Market Prices
                 </button>
                 <button
-                    className={`pb-2 px-2 text-sm font-medium border-b-2 ${activeTab === 'announcements' ? 'border-brand text-brand' : 'border-transparent text-text-muted hover:text-text-main'}`}
+                    className={`pb-2 px-2 text-sm font-medium border-b-2 ${activeTab === 'announcements' ? 'border-brand text-brand' : 'border-transparent text-text-secondary hover:text-text-primary'}`}
                     onClick={() => setActiveTab('announcements')}
                 >
                     Announcements
@@ -85,12 +86,12 @@ export default function AdminInfoHubPage() {
                             )}
                             {!loading && activeTab === 'prices' && prices.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={4} className="text-center py-8 text-text-muted">No market prices recorded yet.</TableCell>
+                                    <TableCell colSpan={4} className="text-center py-8 text-text-secondary">No market prices recorded yet.</TableCell>
                                 </TableRow>
                             )}
                             {!loading && activeTab === 'announcements' && announcements.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={4} className="text-center py-8 text-text-muted">No announcements available.</TableCell>
+                                    <TableCell colSpan={4} className="text-center py-8 text-text-secondary">No announcements available.</TableCell>
                                 </TableRow>
                             )}
 
