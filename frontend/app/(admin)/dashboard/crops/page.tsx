@@ -8,6 +8,8 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Plus, Trash2 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
+import { ConfirmationDialog } from '@/components/ui/ConfirmationDialog';
+import { Toast, ToastType } from '@/components/ui/Toast';
 
 
 export default function AdminCropsPage() {
@@ -15,6 +17,9 @@ export default function AdminCropsPage() {
     const [farmers, setFarmers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [cropToDelete, setCropToDelete] = useState<string | null>(null);
+    const [toast, setToast] = useState<{ message: string, type: ToastType } | null>(null);
     const [formData, setFormData] = useState({ name: '', category: 'Vegetables', description: '', quantity_available: '', unit: 'kg', farmer: '', is_published: true });
 
     const fetchCrops = async () => {
@@ -61,13 +66,23 @@ export default function AdminCropsPage() {
         }
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this crop?')) return;
+    const confirmDelete = (id: string) => {
+        setCropToDelete(id);
+        setDeleteDialogOpen(true);
+    };
+
+    const handleDelete = async () => {
+        if (!cropToDelete) return;
         try {
-            await api.delete(`/crops/${id}/`);
+            await api.delete(`/crops/${cropToDelete}/`);
             fetchCrops();
+            setToast({ message: 'Crop deleted successfully.', type: 'success' });
         } catch (err) {
             console.error(err);
+            setToast({ message: 'Failed to delete crop.', type: 'error' });
+        } finally {
+            setDeleteDialogOpen(false);
+            setCropToDelete(null);
         }
     };
 
@@ -112,7 +127,7 @@ export default function AdminCropsPage() {
                                                 </span>
                                             </td>
                                             <td data-label="Actions" className="justify-end gap-2 text-right">
-                                                <Button variant="ghost" size="sm" onClick={() => handleDelete(crop.id)} className="text-error hover:text-red-700 hover:bg-red-50">
+                                                <Button variant="ghost" size="sm" onClick={() => confirmDelete(crop.id)} className="text-error hover:text-red-700 hover:bg-red-50">
                                                     <Trash2 size={16} />
                                                 </Button>
                                             </td>
@@ -183,6 +198,26 @@ export default function AdminCropsPage() {
                     </div>
                 </form>
             </Modal>
+
+            <ConfirmationDialog
+                isOpen={deleteDialogOpen}
+                onClose={() => {
+                    setDeleteDialogOpen(false);
+                    setCropToDelete(null);
+                }}
+                onConfirm={handleDelete}
+                title="Delete Crop"
+                description="This action cannot be undone. The crop will be permanently removed."
+                confirmLabel="Delete Crop"
+            />
+
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
         </div>
     );
 }
