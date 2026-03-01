@@ -6,11 +6,13 @@ import { api } from '@/lib/api/axios';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { CheckCircle, XCircle } from 'lucide-react';
+import { useToast } from '@/components/providers/ToastProvider';
 
 
 export default function AdminOrdersPage() {
     const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const { showToast } = useToast();
 
     const fetchOrders = async () => {
         try {
@@ -31,9 +33,10 @@ export default function AdminOrdersPage() {
         try {
             await api.patch(`/orders/${id}/`, { status });
             fetchOrders();
+            showToast('success', `Order status updated to ${status}.`);
         } catch (err) {
             console.error(err);
-            alert('Failed to update order status');
+            showToast('error', 'Failed to update order status.');
         }
     };
 

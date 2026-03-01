@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/Input';
 import { Plus, Trash2 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import { ConfirmationDialog } from '@/components/ui/ConfirmationDialog';
-import { Toast, ToastType } from '@/components/ui/Toast';
+import { useToast } from '@/components/providers/ToastProvider';
 
 
 export default function AdminFarmersPage() {
@@ -19,7 +19,7 @@ export default function AdminFarmersPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [farmerToDelete, setFarmerToDelete] = useState<string | null>(null);
-    const [toast, setToast] = useState<{ message: string, type: ToastType } | null>(null);
+    const { showToast } = useToast();
     const [formData, setFormData] = useState({ user: '', full_name: '', phone: '', village_area: '', bio: '', is_active: true });
 
     const fetchData = async () => {
@@ -51,8 +51,9 @@ export default function AdminFarmersPage() {
             setIsModalOpen(false);
             fetchData();
             setFormData({ user: users[0]?.id || '', full_name: '', phone: '', village_area: '', bio: '', is_active: true });
+            showToast('success', 'Farmer profile created successfully.');
         } catch (err) {
-            alert('Failed to add farmer profile. Ensure all required fields are filled and user is not already a farmer.');
+            showToast('error', 'Failed to add farmer profile. Ensure all required fields are filled and user is not already a farmer.');
             console.error(err);
         }
     };
@@ -68,10 +69,10 @@ export default function AdminFarmersPage() {
             // Soft delete / deactivate
             await api.patch(`/farmers/${farmerToDelete}/`, { is_active: false });
             fetchData();
-            setToast({ message: 'Farmer profile deactivated.', type: 'success' });
+            showToast('success', 'Farmer profile deactivated.');
         } catch (err) {
             console.error(err);
-            setToast({ message: 'Failed to deactivate farmer.', type: 'error' });
+            showToast('error', 'Failed to deactivate farmer.');
         } finally {
             setDeleteDialogOpen(false);
             setFarmerToDelete(null);
@@ -182,14 +183,6 @@ export default function AdminFarmersPage() {
                 description="This action will deactivate the farmer profile. They will no longer be visible in the public directory."
                 confirmLabel="Deactivate Account"
             />
-
-            {toast && (
-                <Toast
-                    message={toast.message}
-                    type={toast.type}
-                    onClose={() => setToast(null)}
-                />
-            )}
         </div>
     );
 }

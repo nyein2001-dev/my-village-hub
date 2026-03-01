@@ -1,12 +1,15 @@
 'use client';
 
 import { AuthProvider } from '@/hooks/useAuth';
+import { ToastProvider } from '@/components/providers/ToastProvider';
 import { ReactNode } from 'react';
 
 export function ClientProviders({ children }: { children: ReactNode }) {
     return (
         <AuthProvider>
-            {children}
+            <ToastProvider>
+                {children}
+            </ToastProvider>
         </AuthProvider>
     );
 }

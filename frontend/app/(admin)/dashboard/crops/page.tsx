@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/Input';
 import { Plus, Trash2 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import { ConfirmationDialog } from '@/components/ui/ConfirmationDialog';
-import { Toast, ToastType } from '@/components/ui/Toast';
+import { useToast } from '@/components/providers/ToastProvider';
 
 
 export default function AdminCropsPage() {
@@ -19,7 +19,7 @@ export default function AdminCropsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [cropToDelete, setCropToDelete] = useState<string | null>(null);
-    const [toast, setToast] = useState<{ message: string, type: ToastType } | null>(null);
+    const { showToast } = useToast();
     const [formData, setFormData] = useState({ name: '', category: 'Vegetables', description: '', quantity_available: '', unit: 'kg', farmer: '', is_published: true });
 
     const fetchCrops = async () => {
@@ -60,8 +60,9 @@ export default function AdminCropsPage() {
             setIsModalOpen(false);
             fetchCrops();
             setFormData({ name: '', category: 'Vegetables', description: '', quantity_available: '', unit: 'kg', farmer: farmers[0]?.id || '', is_published: true });
+            showToast('success', 'Crop added successfully.');
         } catch (err) {
-            alert('Failed to add crop. Ensure all required fields are filled.');
+            showToast('error', 'Failed to add crop. Ensure all required fields are filled.');
             console.error(err);
         }
     };
@@ -76,10 +77,10 @@ export default function AdminCropsPage() {
         try {
             await api.delete(`/crops/${cropToDelete}/`);
             fetchCrops();
-            setToast({ message: 'Crop deleted successfully.', type: 'success' });
+            showToast('success', 'Crop deleted successfully.');
         } catch (err) {
             console.error(err);
-            setToast({ message: 'Failed to delete crop.', type: 'error' });
+            showToast('error', 'Failed to delete crop.');
         } finally {
             setDeleteDialogOpen(false);
             setCropToDelete(null);
@@ -210,14 +211,6 @@ export default function AdminCropsPage() {
                 description="This action cannot be undone. The crop will be permanently removed."
                 confirmLabel="Delete Crop"
             />
-
-            {toast && (
-                <Toast
-                    message={toast.message}
-                    type={toast.type}
-                    onClose={() => setToast(null)}
-                />
-            )}
         </div>
     );
 }

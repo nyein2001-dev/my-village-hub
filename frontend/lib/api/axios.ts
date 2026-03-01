@@ -35,6 +35,18 @@ api.interceptors.response.use(
             return Promise.reject(error);
         }
 
+        // Global Error Toast Dispatch for 500s or Network Errors
+        if (!error.response || error.response.status >= 500) {
+            if (typeof window !== 'undefined') {
+                const message = error.response
+                    ? 'An unexpected server error occurred. Please try again later.'
+                    : 'Network error. Please check your connection and try again.';
+                window.dispatchEvent(new CustomEvent('global-toast', {
+                    detail: { type: 'error', message }
+                }));
+            }
+        }
+
         // Check if error is 401 Unauthorized and we haven't already tried to refresh
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;

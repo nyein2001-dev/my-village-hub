@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { MapPin, Scale, Leaf } from 'lucide-react';
+import { useToast } from '@/components/providers/ToastProvider';
 
 
 
@@ -41,6 +42,7 @@ export default function CropsPage() {
     const [notes, setNotes] = useState('');
     const [orderSubmitting, setOrderSubmitting] = useState(false);
     const [orderSuccess, setOrderSuccess] = useState(false);
+    const { showToast } = useToast();
 
     useEffect(() => {
         const fetchCrops = async () => {
@@ -73,9 +75,10 @@ export default function CropsPage() {
                 notes: notes
             });
             setOrderSuccess(true);
+            showToast('success', 'Order requested successfully.');
         } catch (err) {
             console.error('Order submission failed', err);
-            alert('Failed to submit order. Please check inputs and try again.');
+            showToast('error', 'Failed to submit order. Please check inputs and try again.');
         } finally {
             setOrderSubmitting(false);
         }

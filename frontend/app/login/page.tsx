@@ -8,23 +8,24 @@ import { Input } from '@/components/ui/Input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Leaf } from 'lucide-react';
 import Link from 'next/link';
+import { useToast } from '@/components/providers/ToastProvider';
 
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
     const { login, isLoading } = useAuth();
+    const { showToast } = useToast();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError('');
 
         try {
             await login({ email, password });
+            showToast('success', 'Logged in successfully.');
             // The auth context will handle navigation after successful login
         } catch (err: any) {
-            setError(err.response?.data?.detail || 'Invalid email or password. Please try again.');
+            showToast('error', err.response?.data?.detail || 'Invalid email or password. Please try again.');
         }
     };
 
@@ -42,12 +43,6 @@ export default function LoginPage() {
                         <p className="text-sm text-text-secondary mt-2">Sign in to access the community management console</p>
                     </CardHeader>
                     <CardContent>
-                        {error && (
-                            <div className="bg-red-50 text-error p-3 rounded-lg text-sm mb-4 border border-red-100">
-                                {error}
-                            </div>
-                        )}
-
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <Input
                                 label="Email Address"
