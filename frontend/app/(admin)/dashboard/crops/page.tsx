@@ -10,7 +10,10 @@ import { Plus, Trash2 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import { ConfirmationDialog } from '@/components/ui/ConfirmationDialog';
 import { useToast } from '@/components/providers/ToastProvider';
-
+import { FormLegend } from '@/components/ui/FormLegend';
+import { Textarea } from '@/components/ui/Textarea';
+import { Select } from '@/components/ui/Select';
+import { validateCropField } from '@/lib/utils/validators';
 
 export default function AdminCropsPage() {
     const [crops, setCrops] = useState<any[]>([]);
@@ -21,6 +24,20 @@ export default function AdminCropsPage() {
     const [cropToDelete, setCropToDelete] = useState<string | null>(null);
     const { showToast } = useToast();
     const [formData, setFormData] = useState({ name: '', category: 'Vegetables', description: '', quantity_available: '', unit: 'kg', farmer: '', is_published: true });
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
+
+    const handleBlur = (field: string, value: any) => {
+        setTouched(prev => ({ ...prev, [field]: true }));
+        setErrors(prev => ({ ...prev, [field]: validateCropField(field, value) }));
+    };
+
+    const handleInputChange = (field: string, value: any) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+        if (touched[field]) {
+            setErrors(prev => ({ ...prev, [field]: validateCropField(field, value) }));
+        }
+    };
 
     const fetchCrops = async () => {
         try {
@@ -52,6 +69,25 @@ export default function AdminCropsPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        let valid = true;
+        const newErrors: { [key: string]: string } = {};
+        const newTouched: { [key: string]: boolean } = {};
+
+        Object.keys(formData).forEach(field => {
+            const err = validateCropField(field, formData[field as keyof typeof formData]);
+            newTouched[field] = true;
+            if (err) {
+                newErrors[field] = err;
+                valid = false;
+            }
+        });
+
+        setErrors(newErrors);
+        setTouched(newTouched);
+
+        if (!valid) return;
+
         try {
             await api.post('/crops/', {
                 ...formData,
@@ -60,9 +96,11 @@ export default function AdminCropsPage() {
             setIsModalOpen(false);
             fetchCrops();
             setFormData({ name: '', category: 'Vegetables', description: '', quantity_available: '', unit: 'kg', farmer: farmers[0]?.id || '', is_published: true });
-            showToast('success', 'Crop added successfully.');
+            setErrors({});
+            setTouched({});
+            showToast('success', 'Crop saved successfully.');
         } catch (err) {
-            showToast('error', 'Failed to add crop. Ensure all required fields are filled.');
+            showToast('error', 'Failed to save crop. Ensure all required fields are filled.');
             console.error(err);
         }
     };
@@ -141,52 +179,79 @@ export default function AdminCropsPage() {
                 </CardContent>
             </Card>
 
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Add New Crop">
-                <form onSubmit={handleSubmit} className="space-y-4">
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create New Crop">
+                <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                    <FormLegend />
                     <div className="grid grid-cols-2 gap-4">
-                        <Input label="Crop Name *" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
-                        <div className="space-y-1">
-                            <label className="block text-sm font-medium text-text-primary">Category *</label>
-                            <select
-                                className="w-full border border-border rounded-button px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
-                                value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })}
-                            >
-                                <option value="Vegetables">Vegetables</option>
-                                <option value="Fruits">Fruits</option>
-                                <option value="Grains">Grains</option>
-                                <option value="Beans/Pulses">Beans/Pulses</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div className="space-y-1">
-                        <label className="block text-sm font-medium text-text-primary">Farmer *</label>
-                        <select
-                            className="w-full border border-border rounded-button px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
+                        <Input
+                            label="Crop name"
                             required
-                            value={formData.farmer} onChange={e => setFormData({ ...formData, farmer: e.target.value })}
-                        >
-                            <option value="" disabled>Select a Farmer</option>
-                            {farmers.map(f => (
-                                <option key={f.id} value={f.id}>{f.full_name}</option>
-                            ))}
-                        </select>
-                        {farmers.length === 0 && <p className="text-xs text-error mt-1">You must create a Farmer profile first before adding crops.</p>}
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <Input label="Quantity Available *" type="number" step="0.01" required value={formData.quantity_available} onChange={e => setFormData({ ...formData, quantity_available: e.target.value })} />
-                        <Input label="Unit *" required value={formData.unit} onChange={e => setFormData({ ...formData, unit: e.target.value })} placeholder="kg, basket, pieces" />
+                            value={formData.name}
+                            onChange={e => handleInputChange('name', e.target.value)}
+                            onBlur={() => handleBlur('name', formData.name)}
+                            error={touched.name ? errors.name : undefined}
+                        />
+                        <Select
+                            label="Category"
+                            required
+                            value={formData.category}
+                            onChange={e => handleInputChange('category', e.target.value)}
+                            onBlur={() => handleBlur('category', formData.category)}
+                            error={touched.category ? errors.category : undefined}
+                            options={[
+                                { label: 'Vegetables', value: 'Vegetables' },
+                                { label: 'Fruits', value: 'Fruits' },
+                                { label: 'Grains', value: 'Grains' },
+                                { label: 'Beans/Pulses', value: 'Beans/Pulses' },
+                                { label: 'Other', value: 'Other' },
+                            ]}
+                        />
                     </div>
 
                     <div className="space-y-1">
-                        <label className="block text-sm font-medium text-text-primary">Description</label>
-                        <textarea
-                            className="w-full border border-border rounded-button px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
-                            rows={3} value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })}
-                        ></textarea>
+                        <Select
+                            label="Farmer"
+                            required
+                            value={formData.farmer}
+                            onChange={e => handleInputChange('farmer', e.target.value)}
+                            onBlur={() => handleBlur('farmer', formData.farmer)}
+                            error={touched.farmer ? errors.farmer : undefined}
+                            placeholder="Select a Farmer"
+                            options={farmers.map(f => ({ label: f.full_name, value: f.id }))}
+                        />
+                        {farmers.length === 0 && <p className="text-xs text-[#D32F2F] mt-1">You must create a Farmer profile first before adding crops.</p>}
                     </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <Input
+                            label="Quantity available"
+                            type="number"
+                            step="0.01"
+                            required
+                            value={formData.quantity_available}
+                            onChange={e => handleInputChange('quantity_available', e.target.value)}
+                            onBlur={() => handleBlur('quantity_available', formData.quantity_available)}
+                            error={touched.quantity_available ? errors.quantity_available : undefined}
+                            placeholder="e.g., 500"
+                        />
+                        <Input
+                            label="Unit"
+                            required
+                            value={formData.unit}
+                            onChange={e => handleInputChange('unit', e.target.value)}
+                            onBlur={() => handleBlur('unit', formData.unit)}
+                            error={touched.unit ? errors.unit : undefined}
+                            placeholder="e.g., kg"
+                        />
+                    </div>
+
+                    <Textarea
+                        label="Description"
+                        maxLength={1000}
+                        rows={3}
+                        value={formData.description}
+                        onChange={e => handleInputChange('description', e.target.value)}
+                    />
 
                     <div className="flex items-center gap-2">
                         <input type="checkbox" id="published" checked={formData.is_published} onChange={e => setFormData({ ...formData, is_published: e.target.checked })} className="rounded text-brand focus:ring-brand" />
@@ -195,7 +260,7 @@ export default function AdminCropsPage() {
 
                     <div className="pt-4 flex justify-end gap-3">
                         <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-                        <Button type="submit" disabled={farmers.length === 0}>Save Crop</Button>
+                        <Button type="submit" disabled={farmers.length === 0}>Save</Button>
                     </div>
                 </form>
             </Modal>

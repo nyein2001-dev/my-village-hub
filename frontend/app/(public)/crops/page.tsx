@@ -9,8 +9,9 @@ import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { MapPin, Scale, Leaf } from 'lucide-react';
 import { useToast } from '@/components/providers/ToastProvider';
-
-
+import { FormLegend } from '@/components/ui/FormLegend';
+import { Textarea } from '@/components/ui/Textarea';
+import { validateOrderField } from '@/lib/utils/validators';
 
 interface Crop {
     id: string;
@@ -44,6 +45,15 @@ export default function CropsPage() {
     const [orderSuccess, setOrderSuccess] = useState(false);
     const { showToast } = useToast();
 
+    // Validation State
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
+
+    const handleBlur = (field: string, value: string) => {
+        setTouched(prev => ({ ...prev, [field]: true }));
+        setErrors(prev => ({ ...prev, [field]: validateOrderField(field, value, selectedCrop?.quantity_available) }));
+    };
+
     useEffect(() => {
         const fetchCrops = async () => {
             try {
@@ -63,6 +73,30 @@ export default function CropsPage() {
     const handleOrderSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!selectedCrop) return;
+
+        let valid = true;
+        const newErrors: { [key: string]: string } = {};
+        const newTouched: { [key: string]: boolean } = {};
+
+        const fieldsToValidate = [
+            { field: 'buyerName', value: buyerName },
+            { field: 'buyerPhone', value: buyerPhone },
+            { field: 'quantity', value: quantity }
+        ];
+
+        fieldsToValidate.forEach(({ field, value }) => {
+            const err = validateOrderField(field, value, selectedCrop.quantity_available);
+            newTouched[field] = true;
+            if (err) {
+                newErrors[field] = err;
+                valid = false;
+            }
+        });
+
+        setErrors(newErrors);
+        setTouched(newTouched);
+
+        if (!valid) return;
 
         setOrderSubmitting(true);
         try {
@@ -91,6 +125,8 @@ export default function CropsPage() {
         setBuyerPhone('');
         setQuantity('');
         setNotes('');
+        setErrors({});
+        setTouched({});
         setIsModalOpen(true);
     };
 
@@ -181,7 +217,8 @@ export default function CropsPage() {
                         <Button onClick={() => setIsModalOpen(false)}>Back to Marketplace</Button>
                     </div>
                 ) : (
-                    <form onSubmit={handleOrderSubmit} className="space-y-4">
+                    <form onSubmit={handleOrderSubmit} className="space-y-4" noValidate>
+                        <FormLegend />
                         <p className="text-sm text-text-secondary mb-4">
                             You are requesting to buy <strong>{selectedCrop?.name}</strong> from <strong>{selectedCrop?.farmer_detail?.full_name}</strong>.
                             (Available: {selectedCrop?.quantity_available} {selectedCrop?.unit})
@@ -189,44 +226,58 @@ export default function CropsPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <Input
-                                label="Your Name *"
+                                label="Your name"
                                 required
                                 value={buyerName}
-                                onChange={e => setBuyerName(e.target.value)}
+                                onChange={(e) => {
+                                    setBuyerName(e.target.value);
+                                    if (touched.buyerName) handleBlur('buyerName', e.target.value);
+                                }}
+                                onBlur={(e) => handleBlur('buyerName', e.target.value)}
+                                error={touched.buyerName ? errors.buyerName : undefined}
                                 placeholder="U Kyaw..."
                             />
                             <Input
-                                label="Phone Number *"
+                                label="Phone number"
                                 type="tel"
                                 required
                                 value={buyerPhone}
-                                onChange={e => setBuyerPhone(e.target.value)}
+                                onChange={(e) => {
+                                    setBuyerPhone(e.target.value);
+                                    if (touched.buyerPhone) handleBlur('buyerPhone', e.target.value);
+                                }}
+                                onBlur={(e) => handleBlur('buyerPhone', e.target.value)}
+                                error={touched.buyerPhone ? errors.buyerPhone : undefined}
                                 placeholder="09..."
                             />
                         </div>
 
                         <Input
-                            label={`Quantity Requested (${selectedCrop?.unit}) *`}
+                            label={`Quantity requested (${selectedCrop?.unit})`}
                             type="number"
                             step="0.01"
                             min="0.1"
                             max={selectedCrop?.quantity_available || undefined}
                             required
                             value={quantity}
-                            onChange={e => setQuantity(e.target.value)}
+                            onChange={(e) => {
+                                setQuantity(e.target.value);
+                                if (touched.quantity) handleBlur('quantity', e.target.value);
+                            }}
+                            onBlur={(e) => handleBlur('quantity', e.target.value)}
+                            error={touched.quantity ? errors.quantity : undefined}
                             placeholder="e.g. 50"
                         />
 
-                        <div className="flex flex-col space-y-1">
-                            <label className="block text-sm font-medium text-text-primary">Additional Notes (Optional)</label>
-                            <textarea
-                                className="w-full border border-border rounded-button px-4 py-2 focus:ring-2 focus:ring-brand-light focus:border-brand-light outline-none transition-shadow"
-                                rows={3}
-                                value={notes}
-                                onChange={e => setNotes(e.target.value)}
-                                placeholder="Any special requirements?"
-                            ></textarea>
-                        </div>
+                        <Textarea
+                            label="Additional notes"
+                            helperText="Optional"
+                            maxLength={500}
+                            rows={3}
+                            value={notes}
+                            onChange={e => setNotes(e.target.value)}
+                            placeholder="Any special requirements?"
+                        />
 
                         <div className="pt-4 flex justify-end gap-3">
                             <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)} disabled={orderSubmitting}>

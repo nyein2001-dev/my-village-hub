@@ -10,7 +10,10 @@ import { Plus, Trash2 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import { ConfirmationDialog } from '@/components/ui/ConfirmationDialog';
 import { useToast } from '@/components/providers/ToastProvider';
-
+import { FormLegend } from '@/components/ui/FormLegend';
+import { Textarea } from '@/components/ui/Textarea';
+import { Select } from '@/components/ui/Select';
+import { validateFarmerField } from '@/lib/utils/validators';
 
 export default function AdminFarmersPage() {
     const [farmers, setFarmers] = useState<any[]>([]);
@@ -21,6 +24,20 @@ export default function AdminFarmersPage() {
     const [farmerToDelete, setFarmerToDelete] = useState<string | null>(null);
     const { showToast } = useToast();
     const [formData, setFormData] = useState({ user: '', full_name: '', phone: '', village_area: '', bio: '', is_active: true });
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
+
+    const handleBlur = (field: string, value: any) => {
+        setTouched(prev => ({ ...prev, [field]: true }));
+        setErrors(prev => ({ ...prev, [field]: validateFarmerField(field, value) }));
+    };
+
+    const handleInputChange = (field: string, value: any) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+        if (touched[field]) {
+            setErrors(prev => ({ ...prev, [field]: validateFarmerField(field, value) }));
+        }
+    };
 
     const fetchData = async () => {
         try {
@@ -46,11 +63,32 @@ export default function AdminFarmersPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        let valid = true;
+        const newErrors: { [key: string]: string } = {};
+        const newTouched: { [key: string]: boolean } = {};
+
+        Object.keys(formData).forEach(field => {
+            const err = validateFarmerField(field, formData[field as keyof typeof formData]);
+            newTouched[field] = true;
+            if (err) {
+                newErrors[field] = err;
+                valid = false;
+            }
+        });
+
+        setErrors(newErrors);
+        setTouched(newTouched);
+
+        if (!valid) return;
+
         try {
             await api.post('/farmers/', formData);
             setIsModalOpen(false);
             fetchData();
             setFormData({ user: users[0]?.id || '', full_name: '', phone: '', village_area: '', bio: '', is_active: true });
+            setErrors({});
+            setTouched({});
             showToast('success', 'Farmer profile created successfully.');
         } catch (err) {
             showToast('error', 'Failed to add farmer profile. Ensure all required fields are filled and user is not already a farmer.');
@@ -136,34 +174,58 @@ export default function AdminFarmersPage() {
             </Card>
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create Farmer Profile">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-1">
-                        <label className="block text-sm font-medium text-text-primary">Link to Account *</label>
-                        <select
-                            className="w-full border border-border rounded-button px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
-                            required
-                            value={formData.user} onChange={e => setFormData({ ...formData, user: e.target.value })}
-                        >
-                            {users.map(u => (
-                                <option key={u.id} value={u.id}>{u.username} ({u.email})</option>
-                            ))}
-                        </select>
-                    </div>
+                <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                    <FormLegend />
+
+                    <Select
+                        label="Link to account"
+                        required
+                        value={formData.user}
+                        onChange={e => handleInputChange('user', e.target.value)}
+                        onBlur={() => handleBlur('user', formData.user)}
+                        error={touched.user ? errors.user : undefined}
+                        options={users.map(u => ({ label: `${u.username} (${u.email})`, value: u.id }))}
+                    />
 
                     <div className="grid grid-cols-2 gap-4">
-                        <Input label="Full Name *" required value={formData.full_name} onChange={e => setFormData({ ...formData, full_name: e.target.value })} />
-                        <Input label="Phone Number *" required value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} />
+                        <Input
+                            label="Full name"
+                            required
+                            value={formData.full_name}
+                            onChange={e => handleInputChange('full_name', e.target.value)}
+                            onBlur={() => handleBlur('full_name', formData.full_name)}
+                            error={touched.full_name ? errors.full_name : undefined}
+                        />
+                        <Input
+                            label="Phone number"
+                            type="tel"
+                            required
+                            value={formData.phone}
+                            onChange={e => handleInputChange('phone', e.target.value)}
+                            onBlur={() => handleBlur('phone', formData.phone)}
+                            error={touched.phone ? errors.phone : undefined}
+                            placeholder="e.g., +95 9..."
+                        />
                     </div>
 
-                    <Input label="Village Area / Location *" required value={formData.village_area} onChange={e => setFormData({ ...formData, village_area: e.target.value })} placeholder="e.g. North Zone, Farm Plot 12" />
+                    <Input
+                        label="Village area / location"
+                        required
+                        value={formData.village_area}
+                        onChange={e => handleInputChange('village_area', e.target.value)}
+                        onBlur={() => handleBlur('village_area', formData.village_area)}
+                        error={touched.village_area ? errors.village_area : undefined}
+                        placeholder="e.g. North Zone, Farm Plot 12"
+                    />
 
-                    <div className="space-y-1">
-                        <label className="block text-sm font-medium text-text-primary">Biography (Optional)</label>
-                        <textarea
-                            className="w-full border border-border rounded-button px-4 py-2 focus:ring-2 focus:ring-brand-light outline-none"
-                            rows={3} value={formData.bio} onChange={e => setFormData({ ...formData, bio: e.target.value })}
-                        ></textarea>
-                    </div>
+                    <Textarea
+                        label="Biography"
+                        helperText="Optional"
+                        maxLength={500}
+                        rows={3}
+                        value={formData.bio}
+                        onChange={e => handleInputChange('bio', e.target.value)}
+                    />
 
                     <div className="pt-4 flex justify-end gap-3">
                         <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
