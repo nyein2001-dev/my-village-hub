@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [collapsed, setCollapsed] = useState(false); // Managed at layout level
-    const { isAuthenticated, isLoading, isAdmin } = useAuth();
+    const { isAuthenticated, isLoading } = useAuth();
     const router = useRouter();
 
     useEffect(() => {

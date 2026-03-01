@@ -2,15 +2,11 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import timezone
-
-class RoleContext(models.TextChoices):
-    ADMIN = 'admin', 'Admin'
-    CONTENT_EDITOR = 'content_editor', 'Content Editor'
-    FARMER = 'farmer', 'Farmer'
+from core.constants import UserRole
 
 class Role(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=50, choices=RoleContext.choices, unique=True)
+    name = models.CharField(max_length=50, choices=UserRole.choices(), unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

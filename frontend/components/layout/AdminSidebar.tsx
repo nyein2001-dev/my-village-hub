@@ -4,21 +4,24 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import {
-    LayoutDashboard, ShoppingCart, Users, Leaf,
+    LayoutDashboard, Users, Leaf, ShoppingCart,
     MapPin, BookOpen, AlertTriangle, Image as ImageIcon,
     ChevronLeft, ChevronRight, X
 } from 'lucide-react';
+import { RoleBadge } from '@/components/shared/ui/RoleBadge';
+import { UserRole } from '@/types/roles';
 import { useEffect } from 'react';
 
 const ADMIN_NAV = [
-    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/dashboard/crops', label: 'Crops', icon: Leaf },
-    { href: '/dashboard/orders', label: 'Orders', icon: ShoppingCart },
-    { href: '/dashboard/farmers', label: 'Farmers', icon: Users },
-    { href: '/dashboard/archive', label: 'Digital Archive', icon: BookOpen },
-    { href: '/dashboard/gallery', label: 'Gallery', icon: ImageIcon },
-    { href: '/dashboard/info', label: 'News & Prices', icon: MapPin },
-    { href: '/dashboard/emergency', label: 'Emergency', icon: AlertTriangle },
+    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR, UserRole.FARMER] },
+    { href: '/dashboard/users', label: 'Users', icon: Users, roles: [UserRole.ADMIN] },
+    { href: '/dashboard/crops', label: 'Crops', icon: Leaf, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR, UserRole.FARMER] },
+    { href: '/dashboard/orders', label: 'Orders', icon: ShoppingCart, roles: [UserRole.ADMIN, UserRole.FARMER] },
+    { href: '/dashboard/farmers', label: 'Farmers', icon: Users, roles: [UserRole.ADMIN, UserRole.FARMER] },
+    { href: '/dashboard/archive', label: 'Digital Archive', icon: BookOpen, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
+    { href: '/dashboard/gallery', label: 'Gallery', icon: ImageIcon, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
+    { href: '/dashboard/info', label: 'News & Prices', icon: MapPin, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
+    { href: '/dashboard/emergency', label: 'Emergency', icon: AlertTriangle, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
 ];
 
 export function AdminSidebar({
@@ -106,16 +109,19 @@ export function AdminSidebar({
                 {/* User Summary */}
                 {(!collapsed || mobileOpen) && (
                     <div className="p-4 border-b border-white/10 shrink-0">
-                        <div className="text-sm font-medium truncate">{user?.username || 'Admin User'}</div>
-                        <div className="text-xs text-brand-tint truncate uppercase">
-                            {user?.roles?.join(', ') || 'ADMIN'}
-                        </div>
+                        <div className="text-sm font-medium truncate mb-1">{user?.username || 'Admin User'}</div>
+                        <RoleBadge roles={user?.roles || []} />
                     </div>
                 )}
 
                 {/* Navigation */}
                 <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-1 scrollbar-hide">
                     {ADMIN_NAV.map((link) => {
+                        // Check access
+                        const userRoles = user?.roles || ['user']; // Default to avoid crash
+                        const hasAccess = userRoles.some(r => link.roles.includes(r as UserRole));
+                        if (!hasAccess && user?.roles) return null; // Wait for roles if undefined
+
                         const Icon = link.icon;
                         const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
                         return (

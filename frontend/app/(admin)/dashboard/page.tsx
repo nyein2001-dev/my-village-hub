@@ -8,6 +8,9 @@ import { Users, Leaf, ShoppingCart, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 
 
+import { RoleBadge } from '@/components/shared/ui/RoleBadge';
+import { UserRole } from '@/types/roles';
+
 export default function DashboardHome() {
     const { user } = useAuth();
     const [stats, setStats] = useState({
@@ -21,18 +24,19 @@ export default function DashboardHome() {
     useEffect(() => {
         const fetchStats = async () => {
             try {
+                // Catching errors to allow dashboard to load even if 403 on some routes
                 const [cropsRes, ordersRes, farmersRes, pricesRes] = await Promise.all([
-                    api.get('/crops/'),
-                    api.get('/orders/'),
-                    api.get('/farmers/'),
-                    api.get('/market-prices/')
+                    api.get('/crops/').catch(() => ({ data: { count: 0, results: [] } })),
+                    api.get('/orders/').catch(() => ({ data: { count: 0, results: [] } })),
+                    api.get('/farmers/').catch(() => ({ data: { count: 0, results: [] } })),
+                    api.get('/market-prices/').catch(() => ({ data: { count: 0, results: [] } }))
                 ]);
 
                 setStats({
-                    crops: cropsRes.data.count || (Array.isArray(cropsRes.data.results) ? cropsRes.data.results.length : cropsRes.data.length),
-                    orders: ordersRes.data.count || (Array.isArray(ordersRes.data.results) ? ordersRes.data.results.length : ordersRes.data.length),
-                    farmers: farmersRes.data.count || (Array.isArray(farmersRes.data.results) ? farmersRes.data.results.length : farmersRes.data.length),
-                    marketPrices: pricesRes.data.count || (Array.isArray(pricesRes.data.results) ? pricesRes.data.results.length : pricesRes.data.length),
+                    crops: cropsRes.data.count || (Array.isArray(cropsRes.data.results) ? cropsRes.data.results.length : (cropsRes.data.length || 0)),
+                    orders: ordersRes.data.count || (Array.isArray(ordersRes.data.results) ? ordersRes.data.results.length : (ordersRes.data.length || 0)),
+                    farmers: farmersRes.data.count || (Array.isArray(farmersRes.data.results) ? farmersRes.data.results.length : (farmersRes.data.length || 0)),
+                    marketPrices: pricesRes.data.count || (Array.isArray(pricesRes.data.results) ? pricesRes.data.results.length : (pricesRes.data.length || 0)),
                 });
             } catch (err) {
                 console.error('Failed to load dashboard stats', err);
@@ -44,25 +48,28 @@ export default function DashboardHome() {
         fetchStats();
     }, []);
 
+    const userRoles = user?.roles || ['user'];
+
     const statCards = [
-        { title: 'Total Crops', value: stats.crops, icon: Leaf, color: 'text-green-500', bg: 'bg-green-100', href: '/dashboard/crops' },
-        { title: 'Farmer Profiles', value: stats.farmers, icon: Users, color: 'text-blue-500', bg: 'bg-blue-100', href: '/dashboard/farmers' },
-        { title: 'Order Requests', value: stats.orders, icon: ShoppingCart, color: 'text-orange-500', bg: 'bg-orange-100', href: '/dashboard/orders' },
-        { title: 'Market Updates', value: stats.marketPrices, icon: TrendingUp, color: 'text-purple-500', bg: 'bg-purple-100', href: '/dashboard/info' },
-    ];
+        { title: 'Total Crops', value: stats.crops, icon: Leaf, color: 'text-green-500', bg: 'bg-green-100', href: '/dashboard/crops', roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR, UserRole.FARMER] },
+        { title: 'Farmer Profiles', value: stats.farmers, icon: Users, color: 'text-blue-500', bg: 'bg-blue-100', href: '/dashboard/farmers', roles: [UserRole.ADMIN, UserRole.FARMER] },
+        { title: 'Order Requests', value: stats.orders, icon: ShoppingCart, color: 'text-orange-500', bg: 'bg-orange-100', href: '/dashboard/orders', roles: [UserRole.ADMIN, UserRole.FARMER] },
+        { title: 'Market Updates', value: stats.marketPrices, icon: TrendingUp, color: 'text-purple-500', bg: 'bg-purple-100', href: '/dashboard/info', roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
+    ].filter(card => userRoles.some(r => card.roles.includes(r as UserRole)));
 
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-bold text-text-primary">
+                <h1 className="text-2xl font-bold text-text-primary flex items-center gap-3">
                     Welcome back, {user?.username || 'Admin'}
+                    {user?.roles && <RoleBadge roles={user.roles} />}
                 </h1>
                 <p className="text-text-secondary mt-1">Here is the overview of your village platform today.</p>
             </div>
 
             {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {[...Array(4)].map((_, i) => (
+                    {[...Array(statCards.length > 0 ? statCards.length : 4)].map((_, i) => (
                         <div key={i} className="h-32 bg-white animate-pulse rounded-card shadow-sm border border-border"></div>
                     ))}
                 </div>
@@ -91,40 +98,46 @@ export default function DashboardHome() {
 
             {/* Quick Activity Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
-                <Card>
-                    <div className="p-6 border-b border-border flex justify-between items-center">
-                        <h2 className="font-bold text-lg">Recent Order Requests</h2>
-                        <Link href="/dashboard/orders" className="text-sm text-brand font-medium hover:underline">View All</Link>
-                    </div>
-                    <CardContent className="p-0">
-                        <div className="p-6 text-center text-text-secondary text-sm">
-                            Managing orders helps connect farmers to markets efficiently.
-                            Access the full orders list to view details and update statuses.
+                {userRoles.some(r => [UserRole.ADMIN, UserRole.FARMER].includes(r as UserRole)) && (
+                    <Card>
+                        <div className="p-6 border-b border-border flex justify-between items-center">
+                            <h2 className="font-bold text-lg">Recent Order Requests</h2>
+                            <Link href="/dashboard/orders" className="text-sm text-brand font-medium hover:underline">View All</Link>
                         </div>
-                    </CardContent>
-                </Card>
+                        <CardContent className="p-0">
+                            <div className="p-6 text-center text-text-secondary text-sm">
+                                Managing orders helps connect farmers to markets efficiently.
+                                Access the full orders list to view details and update statuses.
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
 
-                <Card>
-                    <div className="p-6 border-b border-border flex justify-between items-center">
-                        <h2 className="font-bold text-lg">System Quick Links</h2>
-                    </div>
-                    <CardContent className="p-6">
-                        <div className="grid grid-cols-2 gap-4">
-                            <Link href="/dashboard/archive" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
-                                <span>🏛️</span> Manage Digital Archive
-                            </Link>
-                            <Link href="/dashboard/info" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
-                                <span>📢</span> Post Announcement
-                            </Link>
-                            <Link href="/dashboard/emergency" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
-                                <span>🚨</span> Update Contacts
-                            </Link>
-                            <Link href="/dashboard/farmers" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
-                                <span>👤</span> Add New Farmer
-                            </Link>
+                {userRoles.some(r => [UserRole.ADMIN, UserRole.CONTENT_EDITOR].includes(r as UserRole)) && (
+                    <Card>
+                        <div className="p-6 border-b border-border flex justify-between items-center">
+                            <h2 className="font-bold text-lg">System Quick Links</h2>
                         </div>
-                    </CardContent>
-                </Card>
+                        <CardContent className="p-6">
+                            <div className="grid grid-cols-2 gap-4">
+                                <Link href="/dashboard/archive" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
+                                    <span>🏛️</span> Manage Digital Archive
+                                </Link>
+                                <Link href="/dashboard/info" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
+                                    <span>📢</span> Post Announcement
+                                </Link>
+                                <Link href="/dashboard/emergency" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
+                                    <span>🚨</span> Update Contacts
+                                </Link>
+                                {userRoles.includes(UserRole.ADMIN) && (
+                                    <Link href="/dashboard/farmers" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
+                                        <span>👤</span> Add New Farmer
+                                    </Link>
+                                )}
+                            </div>
+                        </CardContent>
+                    </Card>
+                )}
             </div>
         </div>
     );

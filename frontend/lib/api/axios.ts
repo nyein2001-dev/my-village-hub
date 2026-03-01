@@ -27,6 +27,14 @@ api.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
+        // Check if error is 403 Forbidden
+        if (error.response?.status === 403) {
+            if (typeof window !== 'undefined') {
+                window.location.href = '/error403';
+            }
+            return Promise.reject(error);
+        }
+
         // Check if error is 401 Unauthorized and we haven't already tried to refresh
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;

@@ -4,13 +4,16 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import get_user_model
 from .serializers import CustomTokenObtainPairSerializer, UserSerializer, UserCreateSerializer, RoleSerializer
-from .models import Role
+from .models import Role, Media
+from core.constants import UserRole
+from rest_framework.parsers import MultiPartParser, FormParser
+from .serializers import MediaSerializer
 
 User = get_user_model()
 
-class IsAdminUser(permissions.BasePermission):
+class IsAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
-        return bool(request.user and request.user.is_authenticated and request.user.roles.filter(name='admin').exists())
+        return bool(request.user and request.user.is_authenticated and request.user.roles.filter(name=UserRole.ADMIN.value).exists())
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
@@ -18,11 +21,11 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class RoleViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdmin]
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdmin]
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -33,10 +36,6 @@ class UserViewSet(viewsets.ModelViewSet):
     def me(self, request):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
-
-from .models import Media
-from .serializers import MediaSerializer
-from rest_framework.parsers import MultiPartParser, FormParser
 
 class MediaViewSet(viewsets.ModelViewSet):
     queryset = Media.objects.all()
