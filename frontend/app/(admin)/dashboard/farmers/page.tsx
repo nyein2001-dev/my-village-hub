@@ -14,8 +14,11 @@ import { FormLegend } from '@/components/ui/FormLegend';
 import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import { validateFarmerField } from '@/lib/utils/validators';
+import { useAuth } from '@/hooks/useAuth';
+import { UserRole } from '@/types/roles';
 
 export default function AdminFarmersPage() {
+    const { user } = useAuth();
     const [farmers, setFarmers] = useState<any[]>([]);
     const [users, setUsers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -116,6 +119,10 @@ export default function AdminFarmersPage() {
             setFarmerToDelete(null);
         }
     };
+
+    if (!user || (!user.roles?.includes(UserRole.ADMIN) && !user.roles?.includes(UserRole.FARMER))) {
+        return <div className="p-8 text-center text-[#C62828] font-medium">403 Forbidden - You do not have permission to access Farmers Management.</div>;
+    }
 
     return (
         <div className="space-y-6">

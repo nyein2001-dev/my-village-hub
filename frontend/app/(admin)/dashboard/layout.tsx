@@ -48,7 +48,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ml-0 ${collapsed ? 'md:ml-[56px] lg:ml-[56px]' : 'md:ml-[240px] lg:ml-[240px]'}`}>
                 <AdminTopbar toggleMobileSidebar={() => setMobileOpen(true)} />
 
-                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4 md:p-6 lg:p-8">
+                <main id="main-content" className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4 md:p-6 lg:p-8">
                     <div className="mx-auto max-w-7xl">
                         {children}
                     </div>

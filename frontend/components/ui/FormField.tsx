@@ -23,7 +23,7 @@ export function FormField({
     return (
         <div className={`w-full space-y-1 ${className}`}>
             {label && (
-                <label htmlFor={htmlFor} className="block text-sm font-medium text-text-primary">
+                <label htmlFor={htmlFor} className="block text-xs font-semibold text-text-primary uppercase tracking-wider mb-1">
                     {label}
                     {required && <span className="text-error ml-1">*</span>}
                 </label>
@@ -33,7 +33,7 @@ export function FormField({
                 <p
                     id={htmlFor ? `${htmlFor}-desc` : undefined}
                     role={error ? 'alert' : undefined}
-                    className={`text-xs flex items-center gap-1 mt-1 ${error ? 'text-[#D32F2F]' : 'text-text-secondary'}`}
+                    className={`text-[12px] flex items-center gap-1 mt-1 ${error ? 'text-[#D32F2F]' : 'text-text-secondary'}`}
                 >
                     {error && <AlertCircle className="h-3 w-3 flex-shrink-0" />}
                     <span>{error || helperText}</span>

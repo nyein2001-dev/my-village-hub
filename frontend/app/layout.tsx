@@ -18,6 +18,9 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`font-sans antialiased bg-gray-50 text-text-primary flex flex-col min-h-screen`}>
+                <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[9999] bg-brand text-white px-4 py-2 rounded shadow-card font-medium">
+                    Skip to main content
+                </a>
                 <ClientProviders>
                     {children}
                 </ClientProviders>

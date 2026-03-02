@@ -63,7 +63,7 @@ export const Toast: React.FC<ToastProps> = ({ message, type, onClose }) => {
         <div
             role="alert"
             aria-live={type === 'error' ? 'assertive' : 'polite'}
-            className={`flex items-start w-full p-4 text-white rounded shadow-lg transition-all duration-200 ease-in-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
+            className={`flex items-start w-full max-w-[400px] p-4 text-white rounded shadow-lg transition-all duration-200 ease-in-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'
                 } ${bgColors[type]}`}
         >
             {icons[type]}

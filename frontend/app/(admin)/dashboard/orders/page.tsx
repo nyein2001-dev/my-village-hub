@@ -7,9 +7,11 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { useToast } from '@/components/providers/ToastProvider';
-
+import { useAuth } from '@/hooks/useAuth';
+import { UserRole } from '@/types/roles';
 
 export default function AdminOrdersPage() {
+    const { user } = useAuth();
     const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const { showToast } = useToast();
@@ -39,6 +41,10 @@ export default function AdminOrdersPage() {
             showToast('error', 'Failed to update order status.');
         }
     };
+
+    if (!user || (!user.roles?.includes(UserRole.ADMIN) && !user.roles?.includes(UserRole.FARMER))) {
+        return <div className="p-8 text-center text-[#C62828] font-medium">403 Forbidden - You do not have permission to access Order Requests.</div>;
+    }
 
     return (
         <div className="space-y-6">

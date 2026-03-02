@@ -43,7 +43,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     // Process the queue
     useEffect(() => {
         if (!currentToast && queue.length > 0) {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setCurrentToast(queue[0]);
             setQueue((prev) => prev.slice(1));
         }

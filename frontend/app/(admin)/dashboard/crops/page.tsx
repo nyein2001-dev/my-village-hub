@@ -14,8 +14,11 @@ import { FormLegend } from '@/components/ui/FormLegend';
 import { Textarea } from '@/components/ui/Textarea';
 import { Select } from '@/components/ui/Select';
 import { validateCropField } from '@/lib/utils/validators';
+import { useAuth } from '@/hooks/useAuth';
+import { UserRole } from '@/types/roles';
 
 export default function AdminCropsPage() {
+    const { user } = useAuth();
     const [crops, setCrops] = useState<any[]>([]);
     const [farmers, setFarmers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -124,6 +127,10 @@ export default function AdminCropsPage() {
             setCropToDelete(null);
         }
     };
+
+    if (!user || (!user.roles?.includes(UserRole.ADMIN) && !user.roles?.includes(UserRole.CONTENT_EDITOR) && !user.roles?.includes(UserRole.FARMER))) {
+        return <div className="p-8 text-center text-[#C62828] font-medium">403 Forbidden - You do not have permission to access Crops Management.</div>;
+    }
 
     return (
         <div className="space-y-6">
