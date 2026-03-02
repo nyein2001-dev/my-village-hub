@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from .models import Farmer
 from apps.authentication.serializers import UserSerializer, MediaSerializer
+from core.serializers import LocalizedModelSerializerMixin
 
-class FarmerSerializer(serializers.ModelSerializer):
+class FarmerSerializer(LocalizedModelSerializerMixin, serializers.ModelSerializer):
     user_detail = UserSerializer(source='user', read_only=True)
     photo_detail = MediaSerializer(source='photo', read_only=True)
 

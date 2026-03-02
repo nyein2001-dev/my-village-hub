@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { api } from '@/lib/api/axios';
 import { Card, CardContent } from '@/components/ui/Card';
 import { TrendingUp, TrendingDown, Pin, Megaphone, PhoneCall } from 'lucide-react';
+import { useLocale } from '@/lib/locales';
 
 
 interface MarketPrice {
@@ -37,6 +38,7 @@ export default function InfoHubPage() {
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
     const [contacts, setContacts] = useState<EmergencyContact[]>([]);
     const [loading, setLoading] = useState(true);
+    const { t } = useLocale();
 
     useEffect(() => {
         const fetchInfoData = async () => {
@@ -61,8 +63,8 @@ export default function InfoHubPage() {
     return (
         <div className="container mx-auto px-4 py-8 max-w-7xl">
             <div className="mb-10 text-center">
-                <h1 className="text-3xl font-bold text-text-primary mb-3">Information Hub</h1>
-                <p className="text-text-secondary">Stay connected with essential updates, market trends, and emergency resources.</p>
+                <h1 className="text-3xl font-bold text-text-primary mb-3">{t.infoHub.title}</h1>
+                <p className="text-text-secondary">{t.infoHub.subtitle}</p>
             </div>
 
             {loading ? (
@@ -78,10 +80,10 @@ export default function InfoHubPage() {
                         {/* Announcements */}
                         <section>
                             <h2 className="text-2xl font-bold text-text-primary mb-6 flex items-center gap-2 border-b border-border pb-2">
-                                <Megaphone className="text-brand h-6 w-6" /> Village Announcements
+                                <Megaphone className="text-brand h-6 w-6" /> {t.infoHub.announcements.title}
                             </h2>
                             {announcements.length === 0 ? (
-                                <p className="text-text-secondary italic">No recent announcements.</p>
+                                <p className="text-text-secondary italic">{t.infoHub.announcements.empty}</p>
                             ) : (
                                 <div className="space-y-4">
                                     {announcements.map(ann => (
@@ -112,11 +114,11 @@ export default function InfoHubPage() {
                         {/* Emergency Contacts */}
                         <section>
                             <h2 className="text-2xl font-bold text-text-primary mb-6 flex items-center gap-2 border-b border-border pb-2 mt-12">
-                                <PhoneCall className="text-error h-6 w-6" /> Emergency Contacts
+                                <PhoneCall className="text-error h-6 w-6" /> {t.infoHub.emergencyContacts.title}
                             </h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {contacts.length === 0 ? (
-                                    <p className="text-text-secondary italic sm:col-span-2">No emergency contacts listed.</p>
+                                    <p className="text-text-secondary italic sm:col-span-2">{t.infoHub.emergencyContacts.empty}</p>
                                 ) : (
                                     contacts.map(contact => (
                                         <div key={contact.id} className="bg-red-50 border border-red-100 p-4 rounded-button flex flex-col justify-center">
@@ -137,13 +139,13 @@ export default function InfoHubPage() {
                     <div className="lg:col-span-1">
                         <div className="bg-white border border-border rounded-card p-6 shadow-sm sticky top-24">
                             <h2 className="text-xl font-bold text-text-primary mb-6 flex items-center gap-2">
-                                <TrendingUp className="text-brand h-5 w-5" /> Local Market Prices
+                                <TrendingUp className="text-brand h-5 w-5" /> {t.infoHub.marketPrices.title}
                             </h2>
 
-                            <p className="text-xs text-text-secondary mb-4">Prices act as a reference for buyers and sellers.</p>
+                            <p className="text-xs text-text-secondary mb-4">{t.infoHub.marketPrices.lastUpdated.replace('{date}', new Date().toLocaleDateString())}</p>
 
                             {prices.length === 0 ? (
-                                <p className="text-text-secondary italic text-sm">No market prices available right now.</p>
+                                <p className="text-text-secondary italic text-sm">{t.infoHub.marketPrices.empty}</p>
                             ) : (
                                 <div className="space-y-0 divide-y divide-gray-100 text-sm">
                                     {prices.map(price => (
@@ -157,9 +159,9 @@ export default function InfoHubPage() {
                                                     {price.price.toLocaleString()} Ks <span className="text-xs font-normal text-gray-500">/ {price.unit}</span>
                                                 </div>
                                                 <div className="flex justify-end mt-1">
-                                                    {price.trend === 'up' && <span className="text-green-500 flex items-center text-xs font-medium"><TrendingUp size={12} className="mr-0.5" /> Up</span>}
-                                                    {price.trend === 'down' && <span className="text-error flex items-center text-xs font-medium"><TrendingDown size={12} className="mr-0.5" /> Down</span>}
-                                                    {price.trend === 'stable' && <span className="text-gray-400 flex items-center text-xs font-medium">- Stable</span>}
+                                                    {price.trend === 'up' && <span className="text-green-500 flex items-center text-xs font-medium"><TrendingUp size={12} className="mr-0.5" /></span>}
+                                                    {price.trend === 'down' && <span className="text-error flex items-center text-xs font-medium"><TrendingDown size={12} className="mr-0.5" /></span>}
+                                                    {price.trend === 'stable' && <span className="text-gray-400 flex items-center text-xs font-medium">-</span>}
                                                 </div>
                                             </div>
                                         </div>

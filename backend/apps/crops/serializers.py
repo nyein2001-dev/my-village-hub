@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Crop, CropHarvestMonth
+from core.serializers import LocalizedModelSerializerMixin
 from apps.farmers.serializers import FarmerSerializer
 from apps.authentication.serializers import MediaSerializer
 
@@ -12,7 +13,7 @@ class CropHarvestMonthSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return instance.month
 
-class CropSerializer(serializers.ModelSerializer):
+class CropSerializer(LocalizedModelSerializerMixin, serializers.ModelSerializer):
     harvest_months = CropHarvestMonthSerializer(many=True, required=False)
     farmer_detail = FarmerSerializer(source='farmer', read_only=True)
     image_detail = MediaSerializer(source='image', read_only=True)

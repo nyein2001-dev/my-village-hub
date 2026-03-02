@@ -12,17 +12,7 @@ import { RoleBadge } from '@/components/shared/ui/RoleBadge';
 import { UserRole } from '@/types/roles';
 import { useEffect } from 'react';
 
-const ADMIN_NAV = [
-    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR, UserRole.FARMER] },
-    { href: '/dashboard/users', label: 'Users', icon: Users, roles: [UserRole.ADMIN] },
-    { href: '/dashboard/crops', label: 'Crops', icon: Leaf, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR, UserRole.FARMER] },
-    { href: '/dashboard/orders', label: 'Orders', icon: ShoppingCart, roles: [UserRole.ADMIN, UserRole.FARMER] },
-    { href: '/dashboard/farmers', label: 'Farmers', icon: Users, roles: [UserRole.ADMIN, UserRole.FARMER] },
-    { href: '/dashboard/archive', label: 'Digital Archive', icon: BookOpen, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
-    { href: '/dashboard/gallery', label: 'Gallery', icon: ImageIcon, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
-    { href: '/dashboard/info', label: 'News & Prices', icon: MapPin, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
-    { href: '/dashboard/emergency', label: 'Emergency', icon: AlertTriangle, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
-];
+import { useLocale } from '@/lib/locales';
 
 export function AdminSidebar({
     mobileOpen,
@@ -37,6 +27,19 @@ export function AdminSidebar({
 }) {
     const pathname = usePathname();
     const { user } = useAuth();
+    const { t } = useLocale();
+
+    const ADMIN_NAV = [
+        { href: '/dashboard', label: t.navigation.admin.dashboard, icon: LayoutDashboard, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR, UserRole.FARMER] },
+        { href: '/dashboard/users', label: t.navigation.admin.users, icon: Users, roles: [UserRole.ADMIN] },
+        { href: '/dashboard/crops', label: t.navigation.admin.crops, icon: Leaf, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR, UserRole.FARMER] },
+        { href: '/dashboard/orders', label: t.navigation.admin.orderRequests, icon: ShoppingCart, roles: [UserRole.ADMIN, UserRole.FARMER] },
+        { href: '/dashboard/farmers', label: t.navigation.admin.farmers, icon: Users, roles: [UserRole.ADMIN, UserRole.FARMER] },
+        { href: '/dashboard/archive', label: t.archive.festivals.title, icon: BookOpen, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
+        { href: '/dashboard/gallery', label: t.archive.gallery.title, icon: ImageIcon, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
+        { href: '/dashboard/info', label: t.navigation.admin.marketPrices, icon: MapPin, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
+        { href: '/dashboard/emergency', label: t.navigation.admin.emergencyContacts, icon: AlertTriangle, roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
+    ];
 
     const toggleSidebar = () => setCollapsed(!collapsed);
 
@@ -78,7 +81,7 @@ export function AdminSidebar({
                     {(!collapsed || mobileOpen) && (
                         <div className="flex items-center gap-2 font-bold text-lg truncate">
                             <Leaf className="h-5 w-5 text-brand-light shrink-0" />
-                            <span className="truncate">Taung Ywar Ma</span>
+                            <span className="truncate">{t.common.villageName}</span>
                         </div>
                     )}
                     {collapsed && !mobileOpen && (

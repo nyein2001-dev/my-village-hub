@@ -1,12 +1,13 @@
 from rest_framework import serializers
 from .models import MarketPrice, Announcement, EmergencyContact
+from core.serializers import LocalizedModelSerializerMixin
 
-class MarketPriceSerializer(serializers.ModelSerializer):
+class MarketPriceSerializer(LocalizedModelSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = MarketPrice
         fields = '__all__'
 
-class AnnouncementSerializer(serializers.ModelSerializer):
+class AnnouncementSerializer(LocalizedModelSerializerMixin, serializers.ModelSerializer):
     class Meta:
         model = Announcement
         fields = '__all__'

@@ -3,7 +3,9 @@ from .models import OrderRequest
 from apps.crops.serializers import CropSerializer
 from apps.farmers.serializers import FarmerSerializer
 
-class OrderRequestSerializer(serializers.ModelSerializer):
+from core.serializers import LocalizedModelSerializerMixin
+
+class OrderRequestSerializer(LocalizedModelSerializerMixin, serializers.ModelSerializer):
     crop_detail = CropSerializer(source='crop', read_only=True)
     farmer_detail = FarmerSerializer(source='farmer', read_only=True)
 
@@ -16,7 +18,7 @@ class OrderRequestSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'created_at', 'status']
 
-class OrderRequestAdminSerializer(serializers.ModelSerializer):
+class OrderRequestAdminSerializer(LocalizedModelSerializerMixin, serializers.ModelSerializer):
     crop_detail = CropSerializer(source='crop', read_only=True)
     farmer_detail = FarmerSerializer(source='farmer', read_only=True)
 

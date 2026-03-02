@@ -16,6 +16,7 @@ import { Select } from '@/components/ui/Select';
 import { validateFarmerField } from '@/lib/utils/validators';
 import { useAuth } from '@/hooks/useAuth';
 import { UserRole } from '@/types/roles';
+import { useLocale } from '@/lib/locales';
 
 export default function AdminFarmersPage() {
     const { user } = useAuth();
@@ -26,19 +27,20 @@ export default function AdminFarmersPage() {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [farmerToDelete, setFarmerToDelete] = useState<string | null>(null);
     const { showToast } = useToast();
+    const { t } = useLocale();
     const [formData, setFormData] = useState({ user: '', full_name: '', phone: '', village_area: '', bio: '', is_active: true });
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
 
     const handleBlur = (field: string, value: any) => {
         setTouched(prev => ({ ...prev, [field]: true }));
-        setErrors(prev => ({ ...prev, [field]: validateFarmerField(field, value) }));
+        setErrors(prev => ({ ...prev, [field]: validateFarmerField(field, value, t) }));
     };
 
     const handleInputChange = (field: string, value: any) => {
         setFormData(prev => ({ ...prev, [field]: value }));
         if (touched[field]) {
-            setErrors(prev => ({ ...prev, [field]: validateFarmerField(field, value) }));
+            setErrors(prev => ({ ...prev, [field]: validateFarmerField(field, value, t) }));
         }
     };
 
@@ -72,7 +74,7 @@ export default function AdminFarmersPage() {
         const newTouched: { [key: string]: boolean } = {};
 
         Object.keys(formData).forEach(field => {
-            const err = validateFarmerField(field, formData[field as keyof typeof formData]);
+            const err = validateFarmerField(field, formData[field as keyof typeof formData], t);
             newTouched[field] = true;
             if (err) {
                 newErrors[field] = err;
@@ -92,9 +94,9 @@ export default function AdminFarmersPage() {
             setFormData({ user: users[0]?.id || '', full_name: '', phone: '', village_area: '', bio: '', is_active: true });
             setErrors({});
             setTouched({});
-            showToast('success', 'Farmer profile created successfully.');
+            showToast('success', t.admin.farmers.saveSuccess);
         } catch (err) {
-            showToast('error', 'Failed to add farmer profile. Ensure all required fields are filled and user is not already a farmer.');
+            showToast('error', t.admin.farmers.saveError);
             console.error(err);
         }
     };
@@ -110,10 +112,10 @@ export default function AdminFarmersPage() {
             // Soft delete / deactivate
             await api.patch(`/farmers/${farmerToDelete}/`, { is_active: false });
             fetchData();
-            showToast('success', 'Farmer profile deactivated.');
+            showToast('success', t.admin.farmers.deactivateSuccess);
         } catch (err) {
             console.error(err);
-            showToast('error', 'Failed to deactivate farmer.');
+            showToast('error', t.admin.farmers.deactivateError);
         } finally {
             setDeleteDialogOpen(false);
             setFarmerToDelete(null);
@@ -121,15 +123,15 @@ export default function AdminFarmersPage() {
     };
 
     if (!user || (!user.roles?.includes(UserRole.ADMIN) && !user.roles?.includes(UserRole.FARMER))) {
-        return <div className="p-8 text-center text-[#C62828] font-medium">403 Forbidden - You do not have permission to access Farmers Management.</div>;
+        return <div className="p-8 text-center text-[#C62828] font-medium">{t.admin.common.forbidden}</div>;
     }
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-text-primary">Farmers Management</h1>
+                <h1 className="text-2xl font-bold text-text-primary">{t.admin.farmers.title}</h1>
                 <Button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2">
-                    <Plus size={16} /> Add Farmer
+                    <Plus size={16} /> {t.admin.farmers.addButton}
                 </Button>
             </div>
 
@@ -139,34 +141,34 @@ export default function AdminFarmersPage() {
                         <table className="responsive-table">
                             <thead>
                                 <tr>
-                                    <th>Full Name</th>
-                                    <th>Area</th>
-                                    <th>Phone</th>
-                                    <th>Status</th>
-                                    <th className="text-right">Actions</th>
+                                    <th>{t.admin.farmers.fullName}</th>
+                                    <th>{t.admin.farmers.area}</th>
+                                    <th>{t.admin.farmers.phone}</th>
+                                    <th>{t.admin.common.status}</th>
+                                    <th className="text-right">{t.admin.common.actions}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {loading ? (
-                                    <tr><td colSpan={5} className="text-center text-text-secondary py-8 block md:table-cell">Loading...</td></tr>
+                                    <tr><td colSpan={5} className="text-center text-text-secondary py-8 block md:table-cell">{t.admin.common.loading}</td></tr>
                                 ) : farmers.length === 0 ? (
-                                    <tr><td colSpan={5} className="text-center text-text-secondary py-8 block md:table-cell">No farmer profiles found. Add one to get started.</td></tr>
+                                    <tr><td colSpan={5} className="text-center text-text-secondary py-8 block md:table-cell">{t.admin.farmers.empty}</td></tr>
                                 ) : (
                                     farmers.map(farmer => (
                                         <tr key={farmer.id} className={!farmer.is_active ? 'opacity-60' : ''}>
-                                            <td data-label="Full Name" className="font-medium text-text-primary">{farmer.full_name}</td>
-                                            <td data-label="Area">{farmer.village_area}</td>
-                                            <td data-label="Phone">
+                                            <td data-label={t.admin.farmers.fullName} className="font-medium text-text-primary">{farmer.full_name}</td>
+                                            <td data-label={t.admin.farmers.area}>{farmer.village_area}</td>
+                                            <td data-label={t.admin.farmers.phone}>
                                                 <a href={`tel:${farmer.phone}`} className="text-brand hover:underline font-medium">{farmer.phone}</a>
                                             </td>
-                                            <td data-label="Status">
+                                            <td data-label={t.admin.common.status}>
                                                 <span className={`px-2 py-1 rounded text-xs font-medium ${farmer.is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                                    {farmer.is_active ? 'Active' : 'Inactive'}
+                                                    {farmer.is_active ? t.admin.farmers.active : t.admin.farmers.inactive}
                                                 </span>
                                             </td>
-                                            <td data-label="Actions" className="justify-end gap-2 text-right">
+                                            <td data-label={t.admin.common.actions} className="justify-end gap-2 text-right">
                                                 {farmer.is_active && (
-                                                    <Button variant="ghost" size="sm" onClick={() => confirmDelete(farmer.id)} className="text-error hover:text-red-700 hover:bg-red-50" title="Deactivate">
+                                                    <Button variant="ghost" size="sm" onClick={() => confirmDelete(farmer.id)} className="text-error hover:text-red-700 hover:bg-red-50" title={t.admin.farmers.deactivateTooltip}>
                                                         <Trash2 size={16} />
                                                     </Button>
                                                 )}
@@ -180,12 +182,12 @@ export default function AdminFarmersPage() {
                 </CardContent>
             </Card>
 
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create Farmer Profile">
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={t.admin.farmers.createTitle}>
                 <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                     <FormLegend />
 
                     <Select
-                        label="Link to account"
+                        label={t.admin.farmers.linkToAccount}
                         required
                         value={formData.user}
                         onChange={e => handleInputChange('user', e.target.value)}
@@ -196,7 +198,7 @@ export default function AdminFarmersPage() {
 
                     <div className="grid grid-cols-2 gap-4">
                         <Input
-                            label="Full name"
+                            label={t.admin.farmers.fullName}
                             required
                             value={formData.full_name}
                             onChange={e => handleInputChange('full_name', e.target.value)}
@@ -204,7 +206,7 @@ export default function AdminFarmersPage() {
                             error={touched.full_name ? errors.full_name : undefined}
                         />
                         <Input
-                            label="Phone number"
+                            label={t.admin.farmers.phoneNumber}
                             type="tel"
                             required
                             value={formData.phone}
@@ -216,7 +218,7 @@ export default function AdminFarmersPage() {
                     </div>
 
                     <Input
-                        label="Village area / location"
+                        label={t.admin.farmers.villageArea}
                         required
                         value={formData.village_area}
                         onChange={e => handleInputChange('village_area', e.target.value)}
@@ -226,8 +228,8 @@ export default function AdminFarmersPage() {
                     />
 
                     <Textarea
-                        label="Biography"
-                        helperText="Optional"
+                        label={t.admin.farmers.biography}
+                        helperText={t.admin.farmers.optional}
                         maxLength={500}
                         rows={3}
                         value={formData.bio}
@@ -235,8 +237,8 @@ export default function AdminFarmersPage() {
                     />
 
                     <div className="pt-4 flex justify-end gap-3">
-                        <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-                        <Button type="submit">Create Profile</Button>
+                        <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>{t.admin.common.cancel}</Button>
+                        <Button type="submit">{t.admin.farmers.createProfile}</Button>
                     </div>
                 </form>
             </Modal>
@@ -248,9 +250,9 @@ export default function AdminFarmersPage() {
                     setFarmerToDelete(null);
                 }}
                 onConfirm={handleDelete}
-                title="Deactivate Account"
-                description="This action will deactivate the farmer profile. They will no longer be visible in the public directory."
-                confirmLabel="Deactivate Account"
+                title={t.admin.farmers.deactivateTitle}
+                description={t.admin.farmers.deactivateDesc}
+                confirmLabel={t.admin.farmers.deactivateTitle}
             />
         </div>
     );

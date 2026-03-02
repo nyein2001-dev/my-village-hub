@@ -10,6 +10,7 @@ import Link from 'next/link';
 
 import { RoleBadge } from '@/components/shared/ui/RoleBadge';
 import { UserRole } from '@/types/roles';
+import { useLocale } from '@/lib/locales';
 
 export default function DashboardHome() {
     const { user } = useAuth();
@@ -20,6 +21,7 @@ export default function DashboardHome() {
         marketPrices: 0
     });
     const [loading, setLoading] = useState(true);
+    const { t } = useLocale();
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -51,20 +53,20 @@ export default function DashboardHome() {
     const userRoles = user?.roles || ['user'];
 
     const statCards = [
-        { title: 'Total Crops', value: stats.crops, icon: Leaf, color: 'text-green-500', bg: 'bg-green-100', href: '/dashboard/crops', roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR, UserRole.FARMER] },
-        { title: 'Farmer Profiles', value: stats.farmers, icon: Users, color: 'text-blue-500', bg: 'bg-blue-100', href: '/dashboard/farmers', roles: [UserRole.ADMIN, UserRole.FARMER] },
-        { title: 'Order Requests', value: stats.orders, icon: ShoppingCart, color: 'text-orange-500', bg: 'bg-orange-100', href: '/dashboard/orders', roles: [UserRole.ADMIN, UserRole.FARMER] },
-        { title: 'Market Updates', value: stats.marketPrices, icon: TrendingUp, color: 'text-purple-500', bg: 'bg-purple-100', href: '/dashboard/info', roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
+        { title: t.admin.dashboard.stats.totalCrops, value: stats.crops, icon: Leaf, color: 'text-green-500', bg: 'bg-green-100', href: '/dashboard/crops', roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR, UserRole.FARMER] },
+        { title: t.admin.farmers.title, value: stats.farmers, icon: Users, color: 'text-blue-500', bg: 'bg-blue-100', href: '/dashboard/farmers', roles: [UserRole.ADMIN, UserRole.FARMER] },
+        { title: t.admin.orderRequests.title, value: stats.orders, icon: ShoppingCart, color: 'text-orange-500', bg: 'bg-orange-100', href: '/dashboard/orders', roles: [UserRole.ADMIN, UserRole.FARMER] },
+        { title: t.admin.marketPrices.title, value: stats.marketPrices, icon: TrendingUp, color: 'text-purple-500', bg: 'bg-purple-100', href: '/dashboard/info', roles: [UserRole.ADMIN, UserRole.CONTENT_EDITOR] },
     ].filter(card => userRoles.some(r => card.roles.includes(r as UserRole)));
 
     return (
         <div className="space-y-6">
             <div>
                 <h1 className="text-2xl font-bold text-text-primary flex items-center gap-3">
-                    Welcome back, {user?.username || 'Admin'}
+                    {t.admin.dashboard.welcome}, {user?.username || 'Admin'}
                     {user?.roles && <RoleBadge roles={user.roles} />}
                 </h1>
-                <p className="text-text-secondary mt-1">Here is the overview of your village platform today.</p>
+                <p className="text-text-secondary mt-1">{t.admin.dashboard.overview}</p>
             </div>
 
             {loading ? (
@@ -101,13 +103,12 @@ export default function DashboardHome() {
                 {userRoles.some(r => [UserRole.ADMIN, UserRole.FARMER].includes(r as UserRole)) && (
                     <Card>
                         <div className="p-6 border-b border-border flex justify-between items-center">
-                            <h2 className="font-bold text-lg">Recent Order Requests</h2>
-                            <Link href="/dashboard/orders" className="text-sm text-brand font-medium hover:underline">View All</Link>
+                            <h2 className="font-bold text-lg">{t.admin.dashboard.recentOrders}</h2>
+                            <Link href="/dashboard/orders" className="text-sm text-brand font-medium hover:underline">{t.admin.dashboard.viewAll}</Link>
                         </div>
                         <CardContent className="p-0">
                             <div className="p-6 text-center text-text-secondary text-sm">
-                                Managing orders helps connect farmers to markets efficiently.
-                                Access the full orders list to view details and update statuses.
+                                {t.admin.dashboard.recentOrdersDesc}
                             </div>
                         </CardContent>
                     </Card>
@@ -116,22 +117,22 @@ export default function DashboardHome() {
                 {userRoles.some(r => [UserRole.ADMIN, UserRole.CONTENT_EDITOR].includes(r as UserRole)) && (
                     <Card>
                         <div className="p-6 border-b border-border flex justify-between items-center">
-                            <h2 className="font-bold text-lg">System Quick Links</h2>
+                            <h2 className="font-bold text-lg">{t.admin.dashboard.quickLinks}</h2>
                         </div>
                         <CardContent className="p-6">
                             <div className="grid grid-cols-2 gap-4">
                                 <Link href="/dashboard/archive" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
-                                    <span>🏛️</span> Manage Digital Archive
+                                    <span>🏛️</span> {t.admin.dashboard.manageArchive}
                                 </Link>
                                 <Link href="/dashboard/info" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
-                                    <span>📢</span> Post Announcement
+                                    <span>📢</span> {t.admin.dashboard.postAnnouncement}
                                 </Link>
                                 <Link href="/dashboard/emergency" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
-                                    <span>🚨</span> Update Contacts
+                                    <span>🚨</span> {t.admin.dashboard.updateContacts}
                                 </Link>
                                 {userRoles.includes(UserRole.ADMIN) && (
                                     <Link href="/dashboard/farmers" className="p-4 bg-gray-50 rounded-button hover:bg-brand-tint/30 transition-colors text-sm font-medium flex flex-col items-center justify-center gap-2 text-center text-text-primary">
-                                        <span>👤</span> Add New Farmer
+                                        <span>👤</span> {t.admin.dashboard.addNewFarmer}
                                     </Link>
                                 )}
                             </div>

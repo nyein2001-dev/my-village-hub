@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { api } from '@/lib/api/axios';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Calendar, User, Clock } from 'lucide-react';
+import { useLocale } from '@/lib/locales';
 
 
 
@@ -32,6 +33,7 @@ export default function ArchivePage() {
     const [festivals, setFestivals] = useState<Festival[]>([]);
     const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
+    const { t } = useLocale();
 
     useEffect(() => {
         const fetchArchiveData = async () => {
@@ -54,8 +56,8 @@ export default function ArchivePage() {
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="mb-12 text-center max-w-3xl mx-auto">
-                <h1 className="text-4xl font-bold text-text-primary mb-4">Village Digital Archive</h1>
-                <p className="text-text-secondary text-lg">Preserving our vibrant culture, documenting our history, and giving voice to our youth.</p>
+                <h1 className="text-4xl font-bold text-text-primary mb-4">{t.archive.title}</h1>
+                <p className="text-text-secondary text-lg">{t.archive.subtitle}</p>
             </div>
 
             {loading ? (
@@ -69,11 +71,11 @@ export default function ArchivePage() {
                     <section>
                         <div className="flex items-center gap-2 mb-6 border-b border-border pb-2">
                             <Calendar className="text-brand h-6 w-6" />
-                            <h2 className="text-2xl font-bold text-text-primary">Upcoming & Past Festivals</h2>
+                            <h2 className="text-2xl font-bold text-text-primary">{t.archive.festivals.title}</h2>
                         </div>
 
                         {festivals.length === 0 ? (
-                            <p className="text-text-secondary italic">No signature festivals documented yet.</p>
+                            <p className="text-text-secondary italic">{t.archive.festivals.empty}</p>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {festivals.map(festival => (
@@ -99,11 +101,11 @@ export default function ArchivePage() {
                     <section>
                         <div className="flex items-center gap-2 mb-6 border-b border-border pb-2">
                             <User className="text-brand h-6 w-6" />
-                            <h2 className="text-2xl font-bold text-text-primary">Youth Perspectives Blog</h2>
+                            <h2 className="text-2xl font-bold text-text-primary">{t.archive.youthBlog.title}</h2>
                         </div>
 
                         {blogPosts.length === 0 ? (
-                            <p className="text-text-secondary italic">No blog posts published yet.</p>
+                            <p className="text-text-secondary italic">{t.archive.youthBlog.empty}</p>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 {blogPosts.map(post => (
@@ -115,7 +117,7 @@ export default function ArchivePage() {
                                             <div className="text-xs text-brand font-medium mb-2 flex items-center gap-2">
                                                 <span>{new Date(post.published_date).toLocaleDateString()}</span>
                                                 <span>•</span>
-                                                <span>By {post.author_detail?.username || 'Village Youth'}</span>
+                                                <span>{t.archive.youthBlog.by || 'By'} {post.author_detail?.username || 'Village Youth'}</span>
                                             </div>
                                             <h3 className="text-xl font-bold text-text-primary mb-2 line-clamp-2">{post.title}</h3>
                                             <p className="text-text-secondary text-sm line-clamp-3 leading-relaxed">

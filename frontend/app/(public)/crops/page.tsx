@@ -12,6 +12,7 @@ import { useToast } from '@/components/providers/ToastProvider';
 import { FormLegend } from '@/components/ui/FormLegend';
 import { Textarea } from '@/components/ui/Textarea';
 import { validateOrderField } from '@/lib/utils/validators';
+import { useLocale } from '@/lib/locales';
 
 interface Crop {
     id: string;
@@ -44,6 +45,7 @@ export default function CropsPage() {
     const [orderSubmitting, setOrderSubmitting] = useState(false);
     const [orderSuccess, setOrderSuccess] = useState(false);
     const { showToast } = useToast();
+    const { t } = useLocale();
 
     // Validation State
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -51,7 +53,7 @@ export default function CropsPage() {
 
     const handleBlur = (field: string, value: string) => {
         setTouched(prev => ({ ...prev, [field]: true }));
-        setErrors(prev => ({ ...prev, [field]: validateOrderField(field, value, selectedCrop?.quantity_available) }));
+        setErrors(prev => ({ ...prev, [field]: validateOrderField(field, value, t, selectedCrop?.quantity_available) }));
     };
 
     useEffect(() => {
@@ -85,7 +87,7 @@ export default function CropsPage() {
         ];
 
         fieldsToValidate.forEach(({ field, value }) => {
-            const err = validateOrderField(field, value, selectedCrop.quantity_available);
+            const err = validateOrderField(field, value, t, selectedCrop.quantity_available);
             newTouched[field] = true;
             if (err) {
                 newErrors[field] = err;
@@ -109,10 +111,10 @@ export default function CropsPage() {
                 notes: notes
             });
             setOrderSuccess(true);
-            showToast('success', 'Order requested successfully.');
+            showToast('success', t.marketplace.orderRequest.successMsg);
         } catch (err) {
             console.error('Order submission failed', err);
-            showToast('error', 'Failed to submit order. Please check inputs and try again.');
+            showToast('error', t.marketplace.orderRequest.errors.general);
         } finally {
             setOrderSubmitting(false);
         }
@@ -133,7 +135,7 @@ export default function CropsPage() {
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="mb-8 pl-4 border-l-4 border-brand">
-                <h1 className="text-3xl font-bold text-text-primary">Marketplace Directory</h1>
+                <h1 className="text-3xl font-bold text-text-primary">{t.marketplace.cropsList.title}</h1>
                 <p className="text-text-secondary mt-2">Browse the finest seasonal crops directly from our village farmers.</p>
             </div>
 
@@ -145,7 +147,7 @@ export default function CropsPage() {
                 <div className="bg-red-50 text-error p-4 rounded-button border border-red-100">{error}</div>
             ) : crops.length === 0 ? (
                 <div className="bg-white p-12 rounded-card text-center shadow-sm border border-border">
-                    <h3 className="text-lg font-medium text-text-primary mb-2">No crops currently listed</h3>
+                    <h3 className="text-lg font-medium text-text-primary mb-2">{t.marketplace.cropsList.empty}</h3>
                     <p className="text-text-secondary">Please check back later as our farmers update their seasonal harvest.</p>
                 </div>
             ) : (
@@ -193,7 +195,7 @@ export default function CropsPage() {
 
                             <CardFooter className="pt-0 border-t-0 bg-transparent">
                                 <Button className="w-full" onClick={() => openOrderModal(crop)}>
-                                    Request Order
+                                    {t.marketplace.cropDetail.requestTitle}
                                 </Button>
                             </CardFooter>
                         </Card>
@@ -212,8 +214,8 @@ export default function CropsPage() {
                         <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                         </div>
-                        <h3 className="text-xl font-bold mb-2">Success!</h3>
-                        <p className="text-text-secondary mb-6">Your order request has been submitted. The farmer will contact you shortly via phone.</p>
+                        <h3 className="text-xl font-bold mb-2">{t.common.toast.success}!</h3>
+                        <p className="text-text-secondary mb-6">{t.marketplace.orderRequest.successMsg}</p>
                         <Button onClick={() => setIsModalOpen(false)}>Back to Marketplace</Button>
                     </div>
                 ) : (
@@ -226,7 +228,7 @@ export default function CropsPage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <Input
-                                label="Your name"
+                                label={t.marketplace.orderRequest.name}
                                 required
                                 value={buyerName}
                                 onChange={(e) => {
@@ -238,7 +240,7 @@ export default function CropsPage() {
                                 placeholder="U Kyaw..."
                             />
                             <Input
-                                label="Phone number"
+                                label={t.marketplace.orderRequest.phone}
                                 type="tel"
                                 required
                                 value={buyerPhone}
@@ -270,7 +272,7 @@ export default function CropsPage() {
                         />
 
                         <Textarea
-                            label="Additional notes"
+                            label={t.marketplace.orderRequest.notes}
                             helperText="Optional"
                             maxLength={500}
                             rows={3}
@@ -281,10 +283,10 @@ export default function CropsPage() {
 
                         <div className="pt-4 flex justify-end gap-3">
                             <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)} disabled={orderSubmitting}>
-                                Cancel
+                                {t.common.cancel}
                             </Button>
                             <Button type="submit" isLoading={orderSubmitting}>
-                                Submit Request
+                                {t.marketplace.orderRequest.submit}
                             </Button>
                         </div>
                     </form>
